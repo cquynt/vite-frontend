@@ -13,7 +13,7 @@ export interface Template {
   fields: TemplateField[]
 }
 
-export const templateNames = ['letter-de', 'minimal']
+export const templateNames = ['letter-de', 'minimal', 'thesis-demo']
 
 export const templateUrl = (name: string, path: string) => `/templates/${name}/${path}`
 

@@ -1,0 +1,6 @@
+[
+  { "key": "title", "label": "Title", "type": "text", "default": "Compiling LaTeX in the Browser" },
+  { "key": "author", "label": "Author", "type": "text", "default": "Max Mustermann" },
+  { "key": "date", "label": "Date", "type": "date", "default": "2026-11-12" },
+  { "key": "abstract", "label": "Abstract", "type": "textarea", "default": "This demo project shows a multi-file LaTeX document with chapters, tables, equations, figures and a bibliography." }
+]

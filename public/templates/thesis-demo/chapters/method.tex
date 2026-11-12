@@ -1,0 +1,20 @@
+\chapter{Method}\label{ch:method}
+
+We minimise the objective
+\begin{equation}\label{eq:obj}
+  \hat{\theta} = \argmin_{\theta\in\R^d} \frac{1}{n}\sum_{i=1}^{n} \ell(f_\theta(x_i), y_i) + \lambda\norm{\theta}^2 .
+\end{equation}
+Equation~\eqref{eq:obj} is convex when $\ell$ is convex.
+
+\begin{align}
+  \nabla J(\theta) &= \frac{1}{n}\sum_{i=1}^{n}\nabla\ell_i + 2\lambda\theta, \\
+  \theta_{t+1}     &= \theta_t - \eta\,\nabla J(\theta_t).
+\end{align}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.3\textwidth]{images/logo.png}
+  \caption{Example figure included from the \texttt{images} folder.}\label{fig:logo}
+\end{figure}
+
+\todo{expand on step size selection}
