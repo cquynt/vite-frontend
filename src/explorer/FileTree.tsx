@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { DragEvent, KeyboardEvent } from 'react'
+import { Icon } from '../ui/Icon'
 import { buildTree } from './buildTree'
 import type { TreeNode } from './buildTree'
 
@@ -20,6 +21,9 @@ interface Creating {
   isFolder: boolean
 }
 
+const indentStep = 8
+const indentBase = 8
+
 const iconClass = (name: string) => {
   const extension = name.slice(name.lastIndexOf('.') + 1).toLowerCase()
   if (['tex', 'sty', 'cls'].includes(extension)) return 'icon-tex'
@@ -31,6 +35,7 @@ const iconClass = (name: string) => {
 export function FileTree(props: FileTreeProps) {
   const { filePaths, folders, activePath, changeStatus, onOpen, onCreateFile, onCreateFolder, onUpload, onRemove } = props
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['sections', 'images']))
+  const [sectionOpen, setSectionOpen] = useState(true)
   const [selectedFolder, setSelectedFolder] = useState('')
   const [creating, setCreating] = useState<Creating | null>(null)
   const [dragging, setDragging] = useState(false)
@@ -49,6 +54,7 @@ export function FileTree(props: FileTreeProps) {
   }
 
   const startCreating = (isFolder: boolean) => {
+    setSectionOpen(true)
     if (selectedFolder) {
       setExpanded((current) => new Set(current).add(selectedFolder))
     }
@@ -71,12 +77,11 @@ export function FileTree(props: FileTreeProps) {
 
   const renderCreating = (parent: string, depth: number) =>
     creating && creating.parent === parent ? (
-      <div className="tree-row" style={{ paddingLeft: 12 + depth * 14 }}>
+      <div className="tree-row" style={{ paddingLeft: indentBase + depth * indentStep + 16 }}>
         <span className={`tree-icon ${creating.isFolder ? 'icon-folder' : 'icon-file'}`} />
         <input
           className="tree-input"
           autoFocus
-          placeholder={creating.isFolder ? 'folder name' : 'file name'}
           onBlur={(event) => commitCreating(event.target.value)}
           onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') commitCreating(event.currentTarget.value)
@@ -89,24 +94,23 @@ export function FileTree(props: FileTreeProps) {
   const renderNode = (node: TreeNode, depth: number) => {
     const isOpen = expanded.has(node.path)
     const isActive = !node.isFolder && node.path === activePath
-    const isSelectedFolder = node.isFolder && node.path === selectedFolder
+    const status = changeStatus[node.path]
     return (
       <div key={node.path}>
         <div
-          className={`tree-row${isActive ? ' active' : ''}${isSelectedFolder ? ' selected' : ''}`}
-          style={{ paddingLeft: 12 + depth * 14 }}
+          tabIndex={-1}
+          className={`tree-row${isActive ? ' active' : ''}${node.isFolder && node.path === selectedFolder ? ' selected' : ''}`}
+          style={{ paddingLeft: indentBase + depth * indentStep + (node.isFolder ? 0 : 16) }}
           onClick={(event) => {
             event.stopPropagation()
             if (node.isFolder) toggleFolder(node.path)
             else onOpen(node.path)
           }}
         >
-          <span className="tree-arrow">{node.isFolder ? (isOpen ? '▾' : '▸') : ''}</span>
+          {node.isFolder && <span className="tree-arrow"><Icon name={isOpen ? 'chevronDown' : 'chevronRight'} /></span>}
           <span className={`tree-icon ${node.isFolder ? 'icon-folder' : iconClass(node.name)}`} />
-          <span className="tree-name">{node.name}</span>
-          {changeStatus[node.path] && (
-            <span className={`tree-status status-${changeStatus[node.path]}`}>{changeStatus[node.path]}</span>
-          )}
+          <span className={`tree-name${status ? ` name-${status}` : ''}`}>{node.name}</span>
+          {status && <span className={`tree-status status-${status}`}>{status}</span>}
           {node.path !== 'main.tex' && (
             <button
               type="button"
@@ -117,18 +121,23 @@ export function FileTree(props: FileTreeProps) {
                 onRemove(node.path, node.isFolder)
               }}
             >
-              ×
+              <Icon name="close" size={14} />
             </button>
           )}
         </div>
         {node.isFolder && isOpen && (
-          <>
+          <div className="tree-children" style={{ ['--guide' as string]: `${indentBase + depth * indentStep + 7}px` }}>
             {renderCreating(node.path, depth + 1)}
             {node.children.map((child) => renderNode(child, depth + 1))}
-          </>
+          </div>
         )}
       </div>
     )
+  }
+
+  const uploadHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onUpload(Array.from(event.target.files ?? []), selectedFolder)
+    event.target.value = ''
   }
 
   return (
@@ -143,38 +152,32 @@ export function FileTree(props: FileTreeProps) {
     >
       <div className="explorer-header">
         <span>EXPLORER</span>
-        <span className="explorer-actions">
+      </div>
+      <div className="section-header" onClick={() => setSectionOpen(!sectionOpen)}>
+        <Icon name={sectionOpen ? 'chevronDown' : 'chevronRight'} />
+        <span className="section-title">PROJECT</span>
+        <span className="section-actions" onClick={(event) => event.stopPropagation()}>
           <button type="button" title="New file" onClick={() => startCreating(false)}>
-            + File
+            <Icon name="newFile" />
           </button>
           <button type="button" title="New folder" onClick={() => startCreating(true)}>
-            + Folder
+            <Icon name="newFolder" />
           </button>
           <button type="button" title="Upload files" onClick={() => fileInputRef.current?.click()}>
-            Upload
+            <Icon name="upload" />
           </button>
           <button type="button" title="Upload folder" onClick={() => folderInputRef.current?.click()}>
-            Upload dir
+            <Icon name="uploadFolder" />
           </button>
         </span>
       </div>
-      <div className="tree-root-label" onClick={() => setSelectedFolder('')}>
-        PROJECT
-      </div>
-      <div className="tree" onClick={() => setSelectedFolder('')}>
-        {renderCreating('', 0)}
-        {tree.map((node) => renderNode(node, 0))}
-      </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        hidden
-        onChange={(event) => {
-          onUpload(Array.from(event.target.files ?? []), selectedFolder)
-          event.target.value = ''
-        }}
-      />
+      {sectionOpen && (
+        <div className="tree" onClick={() => setSelectedFolder('')}>
+          {renderCreating('', 0)}
+          {tree.map((node) => renderNode(node, 0))}
+        </div>
+      )}
+      <input ref={fileInputRef} type="file" multiple hidden onChange={uploadHandler} />
       <input
         ref={(element) => {
           folderInputRef.current = element
@@ -183,10 +186,7 @@ export function FileTree(props: FileTreeProps) {
         type="file"
         multiple
         hidden
-        onChange={(event) => {
-          onUpload(Array.from(event.target.files ?? []), selectedFolder)
-          event.target.value = ''
-        }}
+        onChange={uploadHandler}
       />
     </aside>
   )

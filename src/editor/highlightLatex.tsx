@@ -1,25 +1,28 @@
 import type { ReactNode } from 'react'
+import { tokenizeLatex } from './tokenizeLatex'
 
-const tokenPattern =
-  /(%.*$)|(\{\{\w+\}\})|(\\(?:begin|end)\s*\{[^}]*\})|(\\[a-zA-Z@]+\*?|\\[^a-zA-Z])|(\$\$[^$]*\$\$|\$[^$\n]*\$)|(\[[^\]\n]*\])|([{}])|(&|\\\\)/gm
-
-const classNames = ['comment', 'placeholder', 'environment', 'command', 'math', 'option', 'brace', 'operator']
+const bracketColors = 3
 
 export function highlightLatex(source: string): ReactNode[] {
   const nodes: ReactNode[] = []
   let last = 0
-  for (const match of source.matchAll(tokenPattern)) {
-    const start = match.index
-    if (start > last) {
-      nodes.push(source.slice(last, start))
+  let depth = 0
+  for (const token of tokenizeLatex(source)) {
+    if (token.start > last) {
+      nodes.push(source.slice(last, token.start))
     }
-    const groupIndex = match.slice(1).findIndex((group) => group !== undefined)
+    let className = `tok-${token.kind}`
+    if (token.kind === 'brace') {
+      if (token.text === '}') depth -= 1
+      className = depth < 0 ? 'tok-bracket-error' : `tok-bracket-${depth % bracketColors}`
+      if (token.text === '{') depth += 1
+    }
     nodes.push(
-      <span key={start} className={`tok-${classNames[groupIndex]}`}>
-        {match[0]}
+      <span key={token.start} className={className}>
+        {token.text}
       </span>,
     )
-    last = start + match[0].length
+    last = token.end
   }
   nodes.push(source.slice(last))
   return nodes

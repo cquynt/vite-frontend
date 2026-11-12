@@ -25,3 +25,8 @@ dist-ssr
 
 # BusyTeX assets
 public/core/
+
+# test output
+coverage/
+.vitest/
+.playwright-mcp/
