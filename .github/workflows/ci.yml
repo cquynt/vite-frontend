@@ -1,0 +1,175 @@
+name: ci-cd
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
+
+env:
+  IMAGE: frontend:${{ github.sha }}
+  DR: .github/scripts/dr.sh
+  SOCK: -v /var/run/docker.sock:/var/run/docker.sock
+
+jobs:
+  # ================= Giai đoạn 1: chạy song song ngay =================
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          DR_OPTS="-v npm-cache:/root/.npm" \
+            $DR node:22-alpine sh -c "npm ci && npm run lint"
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t $IMAGE .
+
+  lint-dockerfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker run --rm -i hadolint/hadolint hadolint --failure-threshold error - < Dockerfile
+
+  # Secrets lộ trong source + toàn bộ lịch sử git
+  sec-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - run: |
+          DR_OPTS="-e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0=/src" \
+            $DR zricethezav/gitleaks:latest detect --source /src --no-banner --redact
+
+  # SAST: lỗi code JS/React, OWASP Top 10, Dockerfile, workflow
+  sec-sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          $DR semgrep/semgrep:latest semgrep scan \
+            --config p/javascript --config p/react --config p/owasp-top-ten --config p/dockerfile --config p/github-actions \
+            --exclude-rule yaml.github-actions.security.github-actions-mutable-action-tag.github-actions-mutable-action-tag \
+            --exclude node_modules --exclude dist \
+            --metrics=off --error /src
+
+  # Source/IaC: thư viện khai báo (package-lock), cấu hình Dockerfile, secrets, license
+  sec-fs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          DR_OPTS="-v trivy-cache-fs:/root/.cache" \
+            $DR aquasec/trivy:latest fs --scanners vuln,secret,misconfig,license \
+            --severity HIGH,CRITICAL --exit-code 1 --skip-dirs node_modules,dist .
+
+  # ============ Giai đoạn 2: có image rồi thì quét song song ============
+  sec-image:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          DR_OPTS="$SOCK -v trivy-cache-image:/root/.cache --entrypoint sh" \
+            $DR aquasec/trivy:latest .github/scripts/scan-image.sh $IMAGE
+
+  smoke:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - run: docker run -d --name smoke-$GITHUB_RUN_ID $IMAGE
+      - run: |
+          for i in $(seq 1 30); do
+            if docker exec smoke-$GITHUB_RUN_ID wget -qO- localhost:80/ | grep -q '<div id="root"'; then
+              echo "OK: app lên sau ${i}s"; exit 0
+            fi
+            sleep 1
+          done
+          echo "FAIL: app không lên sau 30s"; docker logs smoke-$GITHUB_RUN_ID; exit 1
+      - if: always()
+        run: docker rm -f smoke-$GITHUB_RUN_ID
+
+  # DAST: OWASP ZAP baseline tấn công thụ động app đang chạy
+  sec-dast:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - run: docker run -d --name dast-$GITHUB_RUN_ID --network ci-local_default $IMAGE
+      - run: |
+          for i in $(seq 1 30); do
+            if docker run --rm --network ci-local_default busybox wget -qO- http://dast-$GITHUB_RUN_ID:80/ >/dev/null 2>&1; then
+              echo "OK: app sẵn sàng (lần thử $i)"; exit 0
+            fi
+            sleep 1
+          done
+          echo "FAIL: app không lên"; docker logs dast-$GITHUB_RUN_ID; exit 1
+      - run: |
+          docker run --rm --network ci-local_default ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t http://dast-$GITHUB_RUN_ID:80 -I
+      - if: always()
+        run: docker rm -f dast-$GITHUB_RUN_ID
+
+  # ================= CD: chỉ khi tất cả xanh =================
+  cd:
+    needs: [lint, lint-dockerfile, sec-secrets, sec-sast, sec-fs, sec-image, smoke, sec-dast]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      COSIGN: gcr.io/projectsigstore/cosign:v2.4.1
+      REG: ci-local-registry-1:5000/frontend
+      COSIGN_FLAGS: --allow-insecure-registry --allow-http-registry
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push (dùng lại image đã build)
+        run: |
+          docker tag $IMAGE localhost:5001/frontend:${GITHUB_SHA::7}
+          docker tag $IMAGE localhost:5001/frontend:latest
+          docker push localhost:5001/frontend:${GITHUB_SHA::7}
+          docker push localhost:5001/frontend:latest
+          DIGEST=$(docker image inspect localhost:5001/frontend:latest --format '{{index .RepoDigests 0}}' | sed 's/.*@//')
+          echo "DIGEST=$DIGEST" >> "$GITHUB_ENV"
+      - name: Ký image (cosign, theo digest)
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          test -n "$COSIGN_PRIVATE_KEY" || { echo "FAIL: thiếu secret COSIGN_PRIVATE_KEY"; exit 1; }
+          docker run --rm --network ci-local_default -e COSIGN_PRIVATE_KEY -e COSIGN_PASSWORD $COSIGN \
+            sign --key env://COSIGN_PRIVATE_KEY --tlog-upload=false $COSIGN_FLAGS --yes $REG@$DIGEST
+          echo "OK: đã ký $DIGEST"
+      - name: SBOM (CycloneDX) + đính kèm vào image dạng attestation đã ký
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          docker run --rm $SOCK -v trivy-cache-image:/root/.cache aquasec/trivy:latest image --quiet \
+            --format cyclonedx $IMAGE > sbom.cdx.json
+          test -s sbom.cdx.json || { echo "FAIL: SBOM rỗng"; exit 1; }
+          echo "SBOM: $(grep -c '"purl"' sbom.cdx.json) component"
+          DR_OPTS="--network ci-local_default -e COSIGN_PRIVATE_KEY -e COSIGN_PASSWORD" \
+            $DR $COSIGN attest --key env://COSIGN_PRIVATE_KEY --type cyclonedx --predicate sbom.cdx.json \
+            --tlog-upload=false $COSIGN_FLAGS --yes $REG@$DIGEST
+          echo "OK: đã đính kèm SBOM vào $DIGEST"
+      - name: Verify chữ ký trước khi deploy
+        run: |
+          DR_OPTS="--network ci-local_default" $DR $COSIGN verify --key /src/cosign.pub \
+            --insecure-ignore-tlog $COSIGN_FLAGS $REG@$DIGEST >/dev/null \
+            && echo "OK: chữ ký hợp lệ $DIGEST" || { echo "FAIL: chữ ký không hợp lệ, hủy deploy"; exit 1; }
+          DR_OPTS="--network ci-local_default" $DR $COSIGN verify-attestation --key /src/cosign.pub --type cyclonedx \
+            --insecure-ignore-tlog $COSIGN_FLAGS $REG@$DIGEST >/dev/null \
+            && echo "OK: SBOM attestation hợp lệ" || { echo "FAIL: thiếu/sai SBOM attestation, hủy deploy"; exit 1; }
+      - name: Deploy (theo digest đã verify)
+        run: |
+          docker rm -f frontend-app 2>/dev/null || true
+          docker run -d --name frontend-app -p 8082:80 localhost:5001/frontend@$DIGEST
+      - name: Verify deploy
+        run: |
+          for i in $(seq 1 30); do
+            if docker exec frontend-app wget -qO- localhost:80/ >/dev/null 2>&1; then
+              echo "OK: frontend-app chạy ở http://localhost:8082"; exit 0
+            fi
+            sleep 1
+          done
+          echo "FAIL: deploy không lên"; docker logs frontend-app; exit 1
