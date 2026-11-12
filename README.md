@@ -1,6 +1,3 @@
-[![ci-cd](http://localhost:3000/cquynt/frontend/actions/workflows/ci.yml/badge.svg)](http://localhost:3000/cquynt/frontend/actions?workflow=ci.yml)
-[![matrix](http://localhost:3000/cquynt/frontend/actions/workflows/matrix.yml/badge.svg)](http://localhost:3000/cquynt/frontend/actions?workflow=matrix.yml)
-
 # LaTeX in Browser (POC)
 
 Frontend-only proof of concept: fill LaTeX templates from a form and compile to PDF in the browser (WASM, Web Worker) with `texlyre-busytex@1.4.1`. No frontend.
