@@ -1,0 +1,26 @@
+- generic [ref=f23e3]:
+  - generic [ref=f23e4]:
+    - generic [ref=f23e5]:
+      - combobox [ref=f23e6]:
+        - option "letter-de" [selected]
+        - option "minimal"
+      - combobox [ref=f23e7]:
+        - option "pdfLaTeX" [selected]
+        - option "XeLaTeX"
+        - option "LuaLaTeX"
+      - generic [ref=f23e8]:
+        - checkbox "bibtex" [checked] [ref=f23e9]
+        - text: bibtex
+      - button "Download PDF" [disabled] [ref=f23e10] [cursor=pointer]
+      - generic [ref=f23e11]: idle
+    - generic [ref=f23e12]: engine load - · first compile - · last compile -
+    - group [ref=f23e13]:
+      - generic "Fields" [ref=f23e14]
+    - combobox [ref=f23e16]:
+      - option "main.tex" [selected]
+    - textbox [ref=f23e17]
+  - main [ref=f23e18]:
+    - generic [ref=f23e19]: No PDF yet
+    - generic [ref=f23e20]:
+      - button "Log" [ref=f23e21] [cursor=pointer]
+      - button "Files" [ref=f23e22] [cursor=pointer]

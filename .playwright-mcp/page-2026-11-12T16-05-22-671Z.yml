@@ -1,0 +1,30 @@
+- generic [ref=f30e3]:
+  - generic [ref=f30e4]:
+    - generic [ref=f30e5]:
+      - combobox [ref=f30e6]:
+        - option "letter-de" [selected]
+        - option "minimal"
+      - combobox [ref=f30e7]:
+        - option "pdfLaTeX" [selected]
+        - option "XeLaTeX"
+        - option "LuaLaTeX"
+      - generic [ref=f30e8]:
+        - checkbox "bibtex" [checked] [ref=f30e9]
+        - text: bibtex
+      - button "Download PDF" [disabled] [ref=f30e10] [cursor=pointer]
+      - generic [ref=f30e11]: idle
+    - generic [ref=f30e12]: engine load - · first compile - · last compile -
+    - group [ref=f30e13]:
+      - generic "Fields" [ref=f30e14]
+    - generic [ref=f30e15]:
+      - combobox [ref=f30e16]:
+        - option "main.tex" [selected]
+      - button "Format (Alt+Shift+F)" [ref=f30e17] [cursor=pointer]
+    - generic [ref=f30e18]:
+      - generic [aria-hidden]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} {{senderName}}\\\\ {{senderAddress}} \\vspace{1cm} {{recipientName}}\\\\ {{recipientAddress}} \\hfill {{city}}, {{date}} \\textbf{{{subject}}} {{greeting}} {{body}} \\input{sections/intro} Siehe auch \\cite{knuth1984}. {{closing}}\\\\ {{senderName}} \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+      - textbox [ref=f30e19]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} {{senderName}}\\\\ {{senderAddress}} \\vspace{1cm} {{recipientName}}\\\\ {{recipientAddress}} \\hfill {{city}}, {{date}} \\textbf{{{subject}}} {{greeting}} {{body}} \\input{sections/intro} Siehe auch \\cite{knuth1984}. {{closing}}\\\\ {{senderName}} \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+  - main [ref=f30e20]:
+    - generic [ref=f30e21]: No PDF yet
+    - generic [ref=f30e22]:
+      - button "Log" [ref=f30e23] [cursor=pointer]
+      - button "Files" [ref=f30e24] [cursor=pointer]

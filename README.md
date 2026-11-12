@@ -1,66 +1,36 @@
-# Frontend (React + Vite) — CI/CD
+# LaTeX in Browser (POC)
 
-[![ci-cd](http://localhost:3000/cquynt/frontend/actions/workflows/ci.yml/badge.svg)](http://localhost:3000/cquynt/frontend/actions?workflow=ci.yml)
+Frontend-only proof of concept: fill LaTeX templates from a form and compile to PDF in the browser (WASM, Web Worker) with `texlyre-busytex@1.4.1`. No backend.
 
-Badge xanh `success` = lint + quét bảo mật + build + deploy thành công; đỏ `failure` = có bước hỏng. Bấm vào badge để xem log từng bước. Badge chỉ hiển thị khi Gitea chạy ở `localhost:3000`.
-
-## Kết quả build thành công
-
-![Pipeline ci-cd xanh](docs/ci-success.png)
-
-## Image đã build
-
-Image chạy non-root (uid 65534), nghe cổng `8080`, base `busybox:stable-musl`, chỉ phục vụ file tĩnh từ `vite build`. Mỗi lần CI xanh trên `main`, image được push lên registry local `localhost:5001`, tag theo 7 ký tự đầu của commit và `latest`:
-
-```
-$ docker images localhost:5001/frontend
-REPOSITORY                TAG       SIZE
-localhost:5001/frontend   latest    1.9MB
-localhost:5001/frontend   bb1cf47   1.9MB
-```
-
-Xem danh sách hiện tại: `curl -s http://localhost:5001/v2/frontend/tags/list`
-
-## Pipeline (`.github/workflows/ci.yml`)
-
-| Giai đoạn | Job |
-|---|---|
-| 1 (song song) | `lint` (oxlint), `image` (build), `lint-dockerfile` (hadolint), `sec-secrets` (gitleaks), `sec-sast` (semgrep), `sec-fs` (trivy fs) |
-| 2 (cần `image`) | `sec-image` (trivy), `smoke`, `sec-dast` (OWASP ZAP) |
-| CD (chỉ `main`, khi tất cả xanh) | push → ký cosign → SBOM CycloneDX → verify chữ ký + SBOM → deploy theo digest → kiểm tra app |
-
-Push chỉ sửa `*.md` / `docs/**` không chạy lại CI.
-
-## Chạy local
+## Run
 
 ```bash
-npm ci
-npm run dev       # http://localhost:5173
-npm run lint
-npm run build
-
-docker compose up # dev, http://localhost:3000 (Dockerfile.dev)
-docker build -t frontend . && docker run --rm -p 8080:8080 frontend
+npm install
+npx texlyre-busytex download-assets ./public/core
+npm run dev
 ```
 
-## Secrets cần có (Gitea → Settings → Actions → Secrets)
+Open the printed URL. `public/core/` is git-ignored.
 
-- `COSIGN_PRIVATE_KEY`
-- `COSIGN_PASSWORD`
+## Assets
 
-Public key để verify: [cosign.pub](cosign.pub).
+`public/core/busytex/` is about 692 MB in total:
 
-## Kiểm tra thủ công
+| File | Size |
+| --- | --- |
+| busytex.wasm | 31 MB |
+| texlive-basic.data (preloaded) | 88.5 MB |
+| texlive-recommended.data (on demand) | 192 MB |
+| texlive-extra.data (on demand) | 326 MB |
+| biber.data / biber.wasm | 20 MB / 9 MB |
 
-```bash
-# chữ ký
-cosign verify --key cosign.pub --insecure-ignore-tlog --allow-insecure-registry --allow-http-registry \
-  localhost:5001/frontend:latest
+Only `texlive-basic` is preloaded; the other packages load on demand. No COOP/COEP headers are required.
 
-# SBOM
-cosign verify-attestation --key cosign.pub --type cyclonedx --insecure-ignore-tlog \
-  --allow-insecure-registry --allow-http-registry localhost:5001/frontend:latest
+## Notes
 
-# app đang chạy
-curl http://localhost:8082/
-```
+- Templates: `public/templates/letter-de`, `public/templates/minimal`, with `{{field}}` placeholders and `fields.json`.
+- The bundled TeX Live has no babel `german.ldf` or `ngerman.ldf`. `letter-de` uses `\usepackage[english]{babel}` plus `\babelprovide[import=de,main]{german}`.
+
+## License
+
+`texlyre-busytex` is licensed under AGPL-3.0-or-later. Distributing this app together with it or its WASM assets carries AGPL obligations.

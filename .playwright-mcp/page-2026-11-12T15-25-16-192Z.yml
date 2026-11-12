@@ -1,0 +1,87 @@
+- generic [ref=f6e3]:
+  - complementary [ref=f6e4]:
+    - heading "LaTeX in Browser" [level=1] [ref=f6e5]
+    - generic [ref=f6e6]:
+      - text: Template
+      - combobox "Template" [ref=f6e7]:
+        - option "letter-de" [selected]
+        - option "minimal"
+    - generic [ref=f6e8]:
+      - text: Sender name
+      - textbox "Sender name" [ref=f6e9]: Max Mustermann
+    - generic [ref=f6e10]:
+      - text: Sender address
+      - textbox "Sender address" [ref=f6e11]: Musterstraße 1, 10115 Berlin
+    - generic [ref=f6e12]:
+      - text: Recipient name
+      - textbox "Recipient name" [ref=f6e13]: Erika Musterfrau
+    - generic [ref=f6e14]:
+      - text: Recipient address
+      - textbox "Recipient address" [ref=f6e15]: Beispielweg 2, 80331 München
+    - generic [ref=f6e16]:
+      - text: City
+      - textbox "City" [ref=f6e17]: Berlin
+    - generic [ref=f6e18]:
+      - text: Date
+      - textbox "Date" [ref=f6e19]: 2026-11-12
+    - generic [ref=f6e20]:
+      - text: Subject
+      - textbox "Subject" [ref=f6e21]: Anfrage zu Angebot Nr. 42 & Rabatt 10%
+    - generic [ref=f6e22]:
+      - text: Greeting
+      - textbox "Greeting" [ref=f6e23]: Sehr geehrte Frau Musterfrau,
+    - generic [ref=f6e24]:
+      - text: Body
+      - textbox "Body" [ref=f6e25]: vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren.
+    - generic [ref=f6e26]:
+      - text: Closing
+      - textbox "Closing" [ref=f6e27]: Mit freundlichen Grüßen
+    - generic [ref=f6e28]:
+      - text: Engine
+      - combobox "Engine" [ref=f6e29]:
+        - option "pdfLaTeX"
+        - option "XeLaTeX" [selected]
+        - option "LuaLaTeX"
+    - generic [ref=f6e30]:
+      - checkbox "bibtex" [checked] [ref=f6e31]
+      - text: bibtex
+    - generic [ref=f6e32]:
+      - button "Compile" [ref=f6e33] [cursor=pointer]
+      - button "Download PDF" [ref=f6e34] [cursor=pointer]
+    - generic [ref=f6e35]:
+      - term [ref=f6e36]: State
+      - definition [ref=f6e37]: done
+      - term [ref=f6e38]: Engine load (first)
+      - definition [ref=f6e39]: 794 ms
+      - term [ref=f6e40]: First compile
+      - definition [ref=f6e41]: 3185 ms
+      - term [ref=f6e42]: Last compile (cached)
+      - definition [ref=f6e43]: 924 ms
+  - main [ref=f6e44]:
+    - iframe [ref=f6e50]
+    - generic [ref=f6e46]:
+      - button "Log" [ref=f6e47] [cursor=pointer]
+      - button "Files" [ref=f6e48] [cursor=pointer]
+    - table [ref=f6e51]:
+      - rowgroup [ref=f6e52]:
+        - row [ref=f6e53]:
+          - columnheader "Path" [ref=f6e54]
+          - columnheader "Status" [ref=f6e55]
+          - columnheader "Size" [ref=f6e56]
+      - rowgroup [ref=f6e57]:
+        - row [ref=f6e58]:
+          - cell "sections/intro.tex" [ref=f6e59]
+          - cell "ok" [ref=f6e60]
+          - cell "126 B" [ref=f6e61]
+        - row [ref=f6e62]:
+          - cell "sections/appendix.tex" [ref=f6e63]
+          - cell "ok" [ref=f6e64]
+          - cell "97 B" [ref=f6e65]
+        - row [ref=f6e66]:
+          - cell "images/logo.png" [ref=f6e67]
+          - cell "ok" [ref=f6e68]
+          - cell "179 B" [ref=f6e69]
+        - row [ref=f6e70]:
+          - cell "references.bib" [ref=f6e71]
+          - cell "ok" [ref=f6e72]
+          - cell "137 B" [ref=f6e73]

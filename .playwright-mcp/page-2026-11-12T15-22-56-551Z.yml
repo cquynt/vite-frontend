@@ -1,0 +1,64 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - heading "LaTeX in Browser" [level=1] [ref=e5]
+    - generic [ref=e6]:
+      - text: Template
+      - combobox "Template" [ref=e7]:
+        - option "letter-de" [selected]
+        - option "minimal"
+    - generic [ref=e8]:
+      - text: Sender name
+      - textbox "Sender name" [ref=e9]: Max Mustermann
+    - generic [ref=e10]:
+      - text: Sender address
+      - textbox "Sender address" [ref=e11]: Musterstraße 1, 10115 Berlin
+    - generic [ref=e12]:
+      - text: Recipient name
+      - textbox "Recipient name" [ref=e13]: Erika Musterfrau
+    - generic [ref=e14]:
+      - text: Recipient address
+      - textbox "Recipient address" [ref=e15]: Beispielweg 2, 80331 München
+    - generic [ref=e16]:
+      - text: City
+      - textbox "City" [ref=e17]: Berlin
+    - generic [ref=e18]:
+      - text: Date
+      - textbox "Date" [ref=e19]: 2026-11-12
+    - generic [ref=e20]:
+      - text: Subject
+      - textbox "Subject" [ref=e21]: Anfrage zu Angebot Nr. 42 & Rabatt 10%
+    - generic [ref=e22]:
+      - text: Greeting
+      - textbox "Greeting" [ref=e23]: Sehr geehrte Frau Musterfrau,
+    - generic [ref=e24]:
+      - text: Body
+      - textbox "Body" [ref=e25]: vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren.
+    - generic [ref=e26]:
+      - text: Closing
+      - textbox "Closing" [ref=e27]: Mit freundlichen Grüßen
+    - generic [ref=e28]:
+      - text: Engine
+      - combobox "Engine" [ref=e29]:
+        - option "pdfLaTeX" [selected]
+        - option "XeLaTeX"
+        - option "LuaLaTeX"
+    - generic [ref=e30]:
+      - checkbox "bibtex" [checked] [ref=e31]
+      - text: bibtex
+    - generic [ref=e32]:
+      - button "Compile" [disabled] [ref=e33] [cursor=pointer]
+      - button "Download PDF" [disabled] [ref=e34] [cursor=pointer]
+    - generic [ref=e35]:
+      - term [ref=e36]: State
+      - definition [ref=e37]: loading engine
+      - term [ref=e38]: Engine load (first)
+      - definition [ref=e39]: "-"
+      - term [ref=e40]: First compile
+      - definition [ref=e41]: "-"
+      - term [ref=e42]: Last compile (cached)
+      - definition [ref=e43]: "-"
+  - main [ref=e44]:
+    - generic [ref=e45]: No PDF yet
+    - generic [ref=e46]:
+      - button "Log" [ref=e47] [cursor=pointer]
+      - button "Files" [ref=e48] [cursor=pointer]

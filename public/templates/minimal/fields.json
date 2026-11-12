@@ -1,0 +1,4 @@
+[
+  { "key": "title", "label": "Title", "type": "text", "default": "Hello" },
+  { "key": "body", "label": "Body", "type": "textarea", "default": "Compiled in the browser with R&D 100% #1." }
+]

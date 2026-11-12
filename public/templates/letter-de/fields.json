@@ -1,0 +1,12 @@
+[
+  { "key": "senderName", "label": "Sender name", "type": "text", "default": "Max Mustermann" },
+  { "key": "senderAddress", "label": "Sender address", "type": "textarea", "default": "Musterstraße 1, 10115 Berlin" },
+  { "key": "recipientName", "label": "Recipient name", "type": "text", "default": "Erika Musterfrau" },
+  { "key": "recipientAddress", "label": "Recipient address", "type": "textarea", "default": "Beispielweg 2, 80331 München" },
+  { "key": "city", "label": "City", "type": "text", "default": "Berlin" },
+  { "key": "date", "label": "Date", "type": "date", "default": "2026-11-12" },
+  { "key": "subject", "label": "Subject", "type": "text", "default": "Anfrage zu Angebot Nr. 42 & Rabatt 10%" },
+  { "key": "greeting", "label": "Greeting", "type": "text", "default": "Sehr geehrte Frau Musterfrau," },
+  { "key": "body", "label": "Body", "type": "textarea", "default": "vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren." },
+  { "key": "closing", "label": "Closing", "type": "text", "default": "Mit freundlichen Grüßen" }
+]

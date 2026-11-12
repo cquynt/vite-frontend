@@ -1,0 +1,64 @@
+- generic [ref=f2e3]:
+  - complementary [ref=f2e4]:
+    - heading "LaTeX in Browser" [level=1] [ref=f2e5]
+    - generic [ref=f2e6]:
+      - text: Template
+      - combobox "Template" [ref=f2e7]:
+        - option "letter-de" [selected]
+        - option "minimal"
+    - generic [ref=f2e8]:
+      - text: Sender name
+      - textbox "Sender name" [ref=f2e9]: Max Mustermann
+    - generic [ref=f2e10]:
+      - text: Sender address
+      - textbox "Sender address" [ref=f2e11]: Musterstraße 1, 10115 Berlin
+    - generic [ref=f2e12]:
+      - text: Recipient name
+      - textbox "Recipient name" [ref=f2e13]: Erika Musterfrau
+    - generic [ref=f2e14]:
+      - text: Recipient address
+      - textbox "Recipient address" [ref=f2e15]: Beispielweg 2, 80331 München
+    - generic [ref=f2e16]:
+      - text: City
+      - textbox "City" [ref=f2e17]: Berlin
+    - generic [ref=f2e18]:
+      - text: Date
+      - textbox "Date" [ref=f2e19]: 2026-11-12
+    - generic [ref=f2e20]:
+      - text: Subject
+      - textbox "Subject" [ref=f2e21]: Anfrage zu Angebot Nr. 42 & Rabatt 10%
+    - generic [ref=f2e22]:
+      - text: Greeting
+      - textbox "Greeting" [ref=f2e23]: Sehr geehrte Frau Musterfrau,
+    - generic [ref=f2e24]:
+      - text: Body
+      - textbox "Body" [ref=f2e25]: vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren.
+    - generic [ref=f2e26]:
+      - text: Closing
+      - textbox "Closing" [ref=f2e27]: Mit freundlichen Grüßen
+    - generic [ref=f2e28]:
+      - text: Engine
+      - combobox "Engine" [ref=f2e29]:
+        - option "pdfLaTeX" [selected]
+        - option "XeLaTeX"
+        - option "LuaLaTeX"
+    - generic [ref=f2e30]:
+      - checkbox "bibtex" [checked] [ref=f2e31]
+      - text: bibtex
+    - generic [ref=f2e32]:
+      - button "Compile" [disabled] [ref=f2e33] [cursor=pointer]
+      - button "Download PDF" [disabled] [ref=f2e34] [cursor=pointer]
+    - generic [ref=f2e35]:
+      - term [ref=f2e36]: State
+      - definition [ref=f2e37]: loading engine
+      - term [ref=f2e38]: Engine load (first)
+      - definition [ref=f2e39]: "-"
+      - term [ref=f2e40]: First compile
+      - definition [ref=f2e41]: "-"
+      - term [ref=f2e42]: Last compile (cached)
+      - definition [ref=f2e43]: "-"
+  - main [ref=f2e44]:
+    - generic [ref=f2e45]: No PDF yet
+    - generic [ref=f2e46]:
+      - button "Log" [ref=f2e47] [cursor=pointer]
+      - button "Files" [ref=f2e48] [cursor=pointer]

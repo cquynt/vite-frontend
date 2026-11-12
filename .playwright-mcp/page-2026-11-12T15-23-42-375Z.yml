@@ -1,0 +1,64 @@
+- generic [ref=f4e3]:
+  - complementary [ref=f4e4]:
+    - heading "LaTeX in Browser" [level=1] [ref=f4e5]
+    - generic [ref=f4e6]:
+      - text: Template
+      - combobox "Template" [ref=f4e7]:
+        - option "letter-de" [selected]
+        - option "minimal"
+    - generic [ref=f4e8]:
+      - text: Sender name
+      - textbox "Sender name" [ref=f4e9]: Max Mustermann
+    - generic [ref=f4e10]:
+      - text: Sender address
+      - textbox "Sender address" [ref=f4e11]: Musterstraße 1, 10115 Berlin
+    - generic [ref=f4e12]:
+      - text: Recipient name
+      - textbox "Recipient name" [ref=f4e13]: Erika Musterfrau
+    - generic [ref=f4e14]:
+      - text: Recipient address
+      - textbox "Recipient address" [ref=f4e15]: Beispielweg 2, 80331 München
+    - generic [ref=f4e16]:
+      - text: City
+      - textbox "City" [ref=f4e17]: Berlin
+    - generic [ref=f4e18]:
+      - text: Date
+      - textbox "Date" [ref=f4e19]: 2026-11-12
+    - generic [ref=f4e20]:
+      - text: Subject
+      - textbox "Subject" [ref=f4e21]: Anfrage zu Angebot Nr. 42 & Rabatt 10%
+    - generic [ref=f4e22]:
+      - text: Greeting
+      - textbox "Greeting" [ref=f4e23]: Sehr geehrte Frau Musterfrau,
+    - generic [ref=f4e24]:
+      - text: Body
+      - textbox "Body" [ref=f4e25]: vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren.
+    - generic [ref=f4e26]:
+      - text: Closing
+      - textbox "Closing" [ref=f4e27]: Mit freundlichen Grüßen
+    - generic [ref=f4e28]:
+      - text: Engine
+      - combobox "Engine" [ref=f4e29]:
+        - option "pdfLaTeX" [selected]
+        - option "XeLaTeX"
+        - option "LuaLaTeX"
+    - generic [ref=f4e30]:
+      - checkbox "bibtex" [checked] [ref=f4e31]
+      - text: bibtex
+    - generic [ref=f4e32]:
+      - button "Compile" [ref=f4e33] [cursor=pointer]
+      - button "Download PDF" [disabled] [ref=f4e34] [cursor=pointer]
+    - generic [ref=f4e35]:
+      - term [ref=f4e36]: State
+      - definition [ref=f4e37]: idle
+      - term [ref=f4e38]: Engine load (first)
+      - definition [ref=f4e39]: "-"
+      - term [ref=f4e40]: First compile
+      - definition [ref=f4e41]: "-"
+      - term [ref=f4e42]: Last compile (cached)
+      - definition [ref=f4e43]: "-"
+  - main [ref=f4e44]:
+    - generic [ref=f4e45]: No PDF yet
+    - generic [ref=f4e46]:
+      - button "Log" [ref=f4e47] [cursor=pointer]
+      - button "Files" [ref=f4e48] [cursor=pointer]
