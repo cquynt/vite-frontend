@@ -1,6 +1,9 @@
+[![ci-cd](http://localhost:3000/cquynt/frontend/actions/workflows/ci.yml/badge.svg)](http://localhost:3000/cquynt/frontend/actions?workflow=ci.yml)
+[![matrix](http://localhost:3000/cquynt/frontend/actions/workflows/matrix.yml/badge.svg)](http://localhost:3000/cquynt/frontend/actions?workflow=matrix.yml)
+
 # LaTeX in Browser (POC)
 
-Frontend-only proof of concept: fill LaTeX templates from a form and compile to PDF in the browser (WASM, Web Worker) with `texlyre-busytex@1.4.1`. No backend.
+Frontend-only proof of concept: fill LaTeX templates from a form and compile to PDF in the browser (WASM, Web Worker) with `texlyre-busytex@1.4.1`. No frontend.
 
 ## Run
 
@@ -16,13 +19,13 @@ Open the printed URL. `public/core/` is git-ignored.
 
 `public/core/busytex/` is about 692 MB in total:
 
-| File | Size |
-| --- | --- |
-| busytex.wasm | 31 MB |
-| texlive-basic.data (preloaded) | 88.5 MB |
-| texlive-recommended.data (on demand) | 192 MB |
-| texlive-extra.data (on demand) | 326 MB |
-| biber.data / biber.wasm | 20 MB / 9 MB |
+| File                                 | Size         |
+| ------------------------------------ | ------------ |
+| busytex.wasm                         | 31 MB        |
+| texlive-basic.data (preloaded)       | 88.5 MB      |
+| texlive-recommended.data (on demand) | 192 MB       |
+| texlive-extra.data (on demand)       | 326 MB       |
+| biber.data / biber.wasm              | 20 MB / 9 MB |
 
 Only `texlive-basic` is preloaded; the other packages load on demand. No COOP/COEP headers are required.
 
