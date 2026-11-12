@@ -5,6 +5,14 @@
 
 Frontend-only proof of concept: fill LaTeX templates from a form and compile to PDF in the browser (WASM, Web Worker) with `texlyre-busytex@1.4.1`. No frontend.
 
+## Screenshots
+
+![Editor with live PDF preview](docs/screenshots/01-home.png)
+
+| Outline | Insert | Build |
+| --- | --- | --- |
+| ![Outline](docs/screenshots/02-outline.png) | ![Insert](docs/screenshots/03-insert.png) | ![Build](docs/screenshots/04-build.png) |
+
 ## Run
 
 ```bash
