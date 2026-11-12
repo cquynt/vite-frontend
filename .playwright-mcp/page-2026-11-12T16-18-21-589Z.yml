@@ -1,0 +1,76 @@
+- generic [ref=f50e3]:
+  - generic [ref=f50e4]:
+    - navigation [ref=f50e5]:
+      - button "Files" [ref=f50e6] [cursor=pointer]
+      - button "Find" [ref=f50e7] [cursor=pointer]
+      - button "Outline" [ref=f50e8] [cursor=pointer]
+      - button "Insert" [ref=f50e9] [cursor=pointer]
+      - button "Build" [ref=f50e10] [cursor=pointer]
+      - button "Git" [ref=f50e11] [cursor=pointer]
+    - generic [ref=f50e12]:
+      - text: img TeX TeX TeX bib
+      - generic [ref=f50e51]:
+        - generic [ref=f50e52]: INSERT
+        - generic [ref=f50e54]:
+          - generic [ref=f50e55]:
+            - generic [ref=f50e56]: Structure
+            - generic [ref=f50e57] [cursor=pointer]: Section
+            - generic [ref=f50e59] [cursor=pointer]: Subsection
+            - generic [ref=f50e61] [cursor=pointer]: Itemize
+            - generic [ref=f50e63] [cursor=pointer]: Enumerate
+            - generic [ref=f50e65] [cursor=pointer]: Abstract
+            - generic [ref=f50e67] [cursor=pointer]: Table of contents
+          - generic [ref=f50e69]:
+            - generic [ref=f50e70]: Math
+            - generic [ref=f50e71] [cursor=pointer]: Inline math
+            - generic [ref=f50e73] [cursor=pointer]: Equation
+            - generic [ref=f50e75] [cursor=pointer]: Align
+            - generic [ref=f50e77] [cursor=pointer]: Fraction
+            - generic [ref=f50e79] [cursor=pointer]: Sum
+          - generic [ref=f50e81]:
+            - generic [ref=f50e82]: Figures and tables
+            - generic [ref=f50e83] [cursor=pointer]: Figure
+            - generic [ref=f50e85] [cursor=pointer]: Table
+          - generic [ref=f50e87]:
+            - generic [ref=f50e88]: Text and references
+            - generic [ref=f50e89] [cursor=pointer]: Bold
+            - generic [ref=f50e91] [cursor=pointer]: Italic
+            - generic [ref=f50e93] [cursor=pointer]: Citation
+            - generic [ref=f50e95] [cursor=pointer]: Reference
+            - generic [ref=f50e97] [cursor=pointer]: Footnote
+            - generic [ref=f50e99] [cursor=pointer]: Bibliography
+          - generic [ref=f50e101]:
+            - generic [ref=f50e102]: Packages
+            - generic [ref=f50e103] [cursor=pointer]: amsmath
+            - generic [ref=f50e105] [cursor=pointer]: hyperref
+            - generic [ref=f50e107] [cursor=pointer]: xcolor
+            - generic [ref=f50e109] [cursor=pointer]: graphicx
+    - generic [ref=f50e24]:
+      - generic [ref=f50e25]: main.tex
+      - generic [ref=f50e48]:
+        - generic [aria-hidden]: "\\section{Title} \\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+        - textbox [ref=f50e49]: "\\section{Title} \\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+      - generic [ref=f50e26]:
+        - generic [ref=f50e27]:
+          - button "OUTPUT" [ref=f50e28] [cursor=pointer]
+          - button "PROBLEMS (2)" [active] [ref=f50e113] [cursor=pointer]
+          - button "×" [ref=f50e30] [cursor=pointer]
+        - generic [ref=f50e31]:
+          - generic [ref=f50e114] [cursor=pointer]:
+            - generic [ref=f50e115]: E
+            - generic [ref=f50e116]: Undefined control sequence.
+            - generic [ref=f50e117]: main.tex:1
+          - generic [ref=f50e118] [cursor=pointer]:
+            - generic [ref=f50e119]: E
+            - generic [ref=f50e120]: ==> Fatal error occurred, no output PDF file produced!
+            - generic [ref=f50e121]: main.tex
+    - main [ref=f50e32]:
+      - iframe [ref=f50e112]
+  - contentinfo [ref=f50e34]:
+    - generic [ref=f50e35]:
+      - button "Sidebar" [ref=f50e36] [cursor=pointer]
+      - button "Panel" [ref=f50e37] [cursor=pointer]
+      - button "Preview" [ref=f50e38] [cursor=pointer]
+      - generic [ref=f50e39]: failed
+      - button "2 errors, 0 warnings" [ref=f50e122] [cursor=pointer]
+    - generic [ref=f50e41]: engine load 899 ms · first 3547 ms · last 77 ms

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import type { KeyboardEvent, UIEvent } from 'react'
 import { formatLatex, indentUnit, nextLineIndent } from './formatLatex'
 import { highlightLatex } from './highlightLatex'
@@ -7,12 +7,45 @@ interface LatexEditorProps {
   value: string
   readOnly: boolean
   onChange: (value: string) => void
+  jump?: { line: number; nonce: number } | null
+  insert?: { text: string; nonce: number } | null
 }
 
-export function LatexEditor({ value, readOnly, onChange }: LatexEditorProps) {
+const lineHeight = 19.5
+
+export function LatexEditor({ value, readOnly, onChange, jump, insert }: LatexEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const highlightRef = useRef<HTMLPreElement>(null)
   const caretRef = useRef<number | null>(null)
+  const handledInsert = useRef(insert?.nonce)
+
+  useEffect(() => {
+    const textarea = textareaRef.current
+    if (!jump || !textarea) {
+      return
+    }
+    const lines = value.split('\n')
+    const before = lines.slice(0, jump.line - 1).reduce((total, text) => total + text.length + 1, 0)
+    const length = lines[jump.line - 1]?.length ?? 0
+    textarea.focus()
+    textarea.setSelectionRange(before, before + length)
+    textarea.scrollTop = Math.max(0, (jump.line - 6) * lineHeight)
+    if (highlightRef.current) {
+      highlightRef.current.scrollTop = textarea.scrollTop
+    }
+  }, [jump?.nonce])
+
+  useEffect(() => {
+    const textarea = textareaRef.current
+    if (!insert || !textarea || readOnly || insert.nonce === handledInsert.current) {
+      return
+    }
+    handledInsert.current = insert.nonce
+    textarea.focus()
+    const { selectionStart, selectionEnd } = textarea
+    caretRef.current = selectionStart + insert.text.length
+    onChange(value.slice(0, selectionStart) + insert.text + value.slice(selectionEnd))
+  }, [insert?.nonce])
 
   useLayoutEffect(() => {
     if (caretRef.current !== null && textareaRef.current) {

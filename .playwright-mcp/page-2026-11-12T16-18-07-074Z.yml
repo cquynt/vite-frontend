@@ -1,0 +1,33 @@
+- generic [ref=f50e3]:
+  - generic [ref=f50e4]:
+    - navigation [ref=f50e5]:
+      - button "Files" [ref=f50e6] [cursor=pointer]
+      - button "Find" [ref=f50e7] [cursor=pointer]
+      - button "Outline" [active] [ref=f50e8] [cursor=pointer]
+      - button "Insert" [ref=f50e9] [cursor=pointer]
+      - button "Build" [ref=f50e10] [cursor=pointer]
+      - button "Git" [ref=f50e11] [cursor=pointer]
+    - generic [ref=f50e12]:
+      - text: img TeX TeX TeX bib
+      - generic [ref=f50e43]:
+        - generic [ref=f50e44]: OUTLINE
+        - paragraph [ref=f50e47]: No sections found
+    - generic [ref=f50e24]:
+      - generic [ref=f50e25]: main.tex
+      - generic [ref=f50e48]:
+        - generic [aria-hidden]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+        - textbox [ref=f50e49]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+      - generic [ref=f50e27]:
+        - button "OUTPUT" [ref=f50e28] [cursor=pointer]
+        - button "PROBLEMS (0)" [ref=f50e29] [cursor=pointer]
+        - button "×" [ref=f50e30] [cursor=pointer]
+    - main [ref=f50e32]:
+      - generic [ref=f50e33]: compiling
+  - contentinfo [ref=f50e34]:
+    - generic [ref=f50e35]:
+      - button "Sidebar" [ref=f50e36] [cursor=pointer]
+      - button "Panel" [ref=f50e37] [cursor=pointer]
+      - button "Preview" [ref=f50e38] [cursor=pointer]
+      - generic [ref=f50e39]: compiling
+      - button "0 errors, 0 warnings" [ref=f50e40] [cursor=pointer]
+    - generic [ref=f50e41]: engine load 899 ms · first - ms · last - ms
