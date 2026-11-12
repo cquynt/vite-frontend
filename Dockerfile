@@ -3,6 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
 COPY . .
+RUN npx texlyre-busytex download-assets ./public/core
 RUN npm run build
 
 
