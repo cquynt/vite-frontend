@@ -1,0 +1,30 @@
+name: matrix
+# Lint + build trên nhiều bản Node × distro Linux × kiến trúc. Chạy trên runner Docker (Linux).
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
+  workflow_dispatch:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - node:22-bookworm-slim   # Node 22, Debian (glibc)
+          - node:24-bookworm-slim   # Node 24, Debian (glibc)
+          - node:22-alpine          # musl libc
+          - node:24-alpine          # musl libc
+        platform: [linux/arm64, linux/amd64]
+    name: ${{ matrix.image }} (${{ matrix.platform }})
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          ARCH=${{ matrix.platform }}; ARCH=${ARCH#linux/}
+          DR_OPTS="--platform ${{ matrix.platform }} -v npm-cache-$ARCH:/root/.npm" \
+            .github/scripts/dr.sh ${{ matrix.image }} \
+            sh -c "npm ci && npm run lint && npm run build"
