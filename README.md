@@ -20,6 +20,17 @@ npm run dev
 
 Open the printed URL. `public/core/` is git-ignored.
 
+## Deploy to Cloudflare
+
+Workers static assets and Pages cap files at 25 MiB, so `busytex.wasm` and `texlive-*.data` live in an R2 bucket (`latex-studio-busytex`). `worker/index.js` serves them same-origin (needed because `new Worker(url)` cannot load cross-origin). Everything else is served from `dist/`; `public/.assetsignore` keeps the big files out of the asset upload.
+
+```bash
+export CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... R2_ACCESS_KEY_ID=... R2_SECRET_ACCESS_KEY=...
+npm run deploy:cloudflare   # download assets, upload big files to R2, build, wrangler deploy
+```
+
+The Docker setup is unchanged and unrelated to this path.
+
 ## Assets
 
 `public/core/busytex/` is about 692 MB in total:

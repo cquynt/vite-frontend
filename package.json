@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy:cloudflare": "bash scripts/deploy-cloudflare.sh"
   },
   "dependencies": {
     "react": "^19.3.1",

@@ -1,0 +1,13 @@
+{
+  "name": "latex-studio",
+  "main": "worker/index.js",
+  "compatibility_date": "2025-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    // Worker runs first for /core/busytex/* so big files can come from R2.
+    "run_worker_first": ["/core/busytex/*"]
+  },
+  "r2_buckets": [{ "binding": "BUSYTEX", "bucket_name": "latex-studio-busytex" }]
+}

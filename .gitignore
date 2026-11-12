@@ -30,3 +30,6 @@ public/core/
 coverage/
 .vitest/
 .playwright-mcp/
+
+# Cloudflare local state
+.wrangler
