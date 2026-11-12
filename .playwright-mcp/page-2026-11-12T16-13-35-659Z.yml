@@ -1,0 +1,25 @@
+- generic [ref=f44e3]:
+  - generic [ref=f44e4]:
+    - navigation [ref=f44e5]:
+      - button "Files" [ref=f44e6] [cursor=pointer]
+      - button "Git" [active] [ref=f44e7] [cursor=pointer]
+    - text: img TeX TeX TeX bib
+    - generic [ref=f44e61]:
+      - generic [ref=f44e62]: SOURCE CONTROL
+      - generic [ref=f44e64]:
+        - textbox "owner/repo or GitHub URL" [ref=f44e65]
+        - textbox "branch" [ref=f44e66]: main
+        - textbox "Personal access token (needed to push)" [ref=f44e67]
+        - button "Connect" [disabled] [ref=f44e68]
+        - paragraph [ref=f44e69]: "Fine-grained token with Contents: read and write on the repository. It is kept in this tab only."
+    - generic [ref=f44e49]:
+      - generic [ref=f44e50]: main.tex
+      - generic [ref=f44e51]:
+        - generic [aria-hidden]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+        - textbox [ref=f44e52]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+    - main [ref=f44e53]:
+      - generic [ref=f44e54]: compiling
+      - generic [ref=f44e55]: OUTPUT
+  - contentinfo [ref=f44e57]:
+    - generic [ref=f44e58]: compiling
+    - generic [ref=f44e59]: engine load 825 ms · first - ms · last - ms

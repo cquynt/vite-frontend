@@ -8,7 +8,17 @@ export interface ProjectFile {
   content: string | Uint8Array
 }
 
-export const mainPath = 'main.tex'
+const defaultMainPath = 'main.tex'
+
+export function findMainPath(files: ProjectFile[]) {
+  if (files.some((file) => file.path === defaultMainPath)) {
+    return defaultMainPath
+  }
+  const documentFile = files.find(
+    (file) => typeof file.content === 'string' && file.content.includes('\\documentclass'),
+  )
+  return documentFile?.path ?? files[0]?.path ?? defaultMainPath
+}
 
 const textExtensions = ['.tex', '.bib', '.sty', '.cls', '.bst', '.txt', '.md', '.cfg', '.def']
 
@@ -27,7 +37,7 @@ const joinPath = (parent: string, name: string) => normalizePath(parent ? `${par
 export function useProject() {
   const [files, setFiles] = useState<ProjectFile[]>([])
   const [folders, setFolders] = useState<string[]>([])
-  const [activePath, setActivePath] = useState(mainPath)
+  const [activePath, setActivePath] = useState(defaultMainPath)
   const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
@@ -36,7 +46,7 @@ export function useProject() {
       const fill = (source: string) => fillTemplate(source, template.fields, {})
       const main = fill(template.mainSource)
       const resolved = await resolveProject(template.name, main, fill)
-      const loaded: ProjectFile[] = [{ path: mainPath, content: main }]
+      const loaded: ProjectFile[] = [{ path: defaultMainPath, content: main }]
       for (const file of resolved) {
         if (file.status === 'ok' && file.content !== undefined) {
           loaded.push({ path: file.path, content: file.content })
@@ -100,6 +110,12 @@ export function useProject() {
     [putFiles],
   )
 
+  const replaceAll = useCallback((next: ProjectFile[]) => {
+    setFiles(next)
+    setFolders([])
+    setActivePath(findMainPath(next))
+  }, [])
+
   const remove = useCallback((path: string, isFolder: boolean) => {
     const prefix = `${path}/`
     setFiles((current) =>
@@ -121,5 +137,6 @@ export function useProject() {
     createFolder,
     upload,
     remove,
+    replaceAll,
   }
 }

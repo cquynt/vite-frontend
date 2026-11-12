@@ -13,7 +13,7 @@
 html, body, #root { height: 100%; }
 body { margin: 0; font-family: system-ui, sans-serif; font-size: 13px; background: var(--bg); color: var(--text); }
 .app { display: flex; flex-direction: column; height: 100%; }
-.layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 260px minmax(0, 1fr) minmax(0, 1fr); }
+.layout { flex: 1; min-height: 0; display: grid; grid-template-columns: 48px 280px minmax(0, 1fr) minmax(0, 1fr); }
 button { font: inherit; color: inherit; cursor: pointer; }
 
 .explorer { background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; min-height: 0; }
@@ -76,3 +76,30 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .error-block { background: #5a1d1d; color: #f48771; padding: 8px; white-space: pre-wrap; margin: 0 0 6px; }
 
 .status-bar { background: var(--accent); color: #fff; display: flex; justify-content: space-between; padding: 2px 12px; font-size: 12px; }
+
+.activity-bar { background: #333333; display: flex; flex-direction: column; }
+.activity-bar button { position: relative; background: transparent; border: 0; border-left: 2px solid transparent; padding: 12px 0; color: var(--muted); font-size: 11px; }
+.activity-bar button.active { color: #fff; border-left-color: #fff; }
+.badge-count { position: absolute; top: 4px; right: 4px; background: var(--accent); color: #fff; border-radius: 8px; padding: 0 5px; font-size: 10px; }
+.sidebar { display: flex; flex-direction: column; min-height: 0; background: var(--sidebar); border-right: 1px solid var(--border); }
+.sidebar[hidden] { display: none; }
+.sidebar .explorer { flex: 1; border-right: 0; }
+.scm { display: flex; flex-direction: column; min-height: 0; flex: 1; overflow: auto; }
+.scm-form { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; }
+.scm-form input, .scm-form textarea { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 4px 6px; font: inherit; }
+.scm-form button, .scm-repo button, .commit button { background: var(--tabbar); border: 1px solid var(--border); border-radius: 3px; padding: 4px 8px; }
+.scm-form button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.scm-form button:disabled, .commit button:disabled { opacity: 0.5; cursor: default; }
+.scm-hint { color: var(--muted); font-size: 11px; margin: 0; }
+.scm-repo { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 6px 10px; background: var(--tabbar); }
+.scm-section { padding: 4px 10px; font-size: 11px; font-weight: bold; background: var(--tabbar); margin-top: 6px; }
+.scm-list { max-height: 30vh; overflow: auto; }
+.scm-status { padding: 4px 10px; margin: 0; color: var(--muted); }
+.commit { padding: 6px 10px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.commit-message { color: #fff; }
+.commit-meta { color: var(--muted); font-size: 11px; }
+.commit button { align-self: flex-start; margin-top: 2px; font-size: 11px; padding: 1px 6px; }
+.tree-status { font-size: 11px; font-weight: bold; margin-left: 4px; }
+.status-M { color: #e2c08d; }
+.status-U { color: #73c991; }
+.status-D { color: #c74e39; }

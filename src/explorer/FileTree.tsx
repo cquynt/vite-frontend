@@ -7,6 +7,7 @@ interface FileTreeProps {
   filePaths: string[]
   folders: string[]
   activePath: string
+  changeStatus: Record<string, string>
   onOpen: (path: string) => void
   onCreateFile: (parent: string, name: string) => void
   onCreateFolder: (parent: string, name: string) => void
@@ -28,7 +29,7 @@ const iconClass = (name: string) => {
 }
 
 export function FileTree(props: FileTreeProps) {
-  const { filePaths, folders, activePath, onOpen, onCreateFile, onCreateFolder, onUpload, onRemove } = props
+  const { filePaths, folders, activePath, changeStatus, onOpen, onCreateFile, onCreateFolder, onUpload, onRemove } = props
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['sections', 'images']))
   const [selectedFolder, setSelectedFolder] = useState('')
   const [creating, setCreating] = useState<Creating | null>(null)
@@ -103,6 +104,9 @@ export function FileTree(props: FileTreeProps) {
           <span className="tree-arrow">{node.isFolder ? (isOpen ? '▾' : '▸') : ''}</span>
           <span className={`tree-icon ${node.isFolder ? 'icon-folder' : iconClass(node.name)}`} />
           <span className="tree-name">{node.name}</span>
+          {changeStatus[node.path] && (
+            <span className={`tree-status status-${changeStatus[node.path]}`}>{changeStatus[node.path]}</span>
+          )}
           {node.path !== 'main.tex' && (
             <button
               type="button"

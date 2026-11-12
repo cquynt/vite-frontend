@@ -1,8 +1,10 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLatexCompiler } from './compiler/useLatexCompiler'
 import { LatexEditor } from './editor/LatexEditor'
 import { FileTree } from './explorer/FileTree'
-import { mainPath, useProject } from './project/useProject'
+import { SourceControlPanel } from './github/SourceControlPanel'
+import { useGitHub } from './github/useGitHub'
+import { findMainPath, useProject } from './project/useProject'
 
 const debounceMs = 800
 const imageTypes: Record<string, string> = {
@@ -33,6 +35,12 @@ export function App() {
   const { compile } = compiler
   const project = useProject()
   const { files, activePath } = project
+  const github = useGitHub(files, project.replaceAll)
+  const [view, setView] = useState<'explorer' | 'git'>('explorer')
+  const mainPath = findMainPath(files)
+  const changeStatus = Object.fromEntries(
+    github.changes.filter((change) => change.status !== 'D').map((change) => [change.path, change.status]),
+  )
   const activeFile = files.find((file) => file.path === activePath)
 
   useEffect(() => {
@@ -43,12 +51,33 @@ export function App() {
       compile({ mainPath, files, engine: 'pdflatex', bibtex: true })
     }, debounceMs)
     return () => clearTimeout(timer)
-  }, [files, compile])
+  }, [files, mainPath, compile])
 
   return (
     <div className="app">
       <div className="layout">
+        <nav className="activity-bar">
+          <button
+            type="button"
+            className={view === 'explorer' ? 'active' : ''}
+            title="Explorer"
+            onClick={() => setView('explorer')}
+          >
+            Files
+          </button>
+          <button
+            type="button"
+            className={view === 'git' ? 'active' : ''}
+            title="Source Control"
+            onClick={() => setView('git')}
+          >
+            Git
+            {github.changes.length > 0 && <span className="badge-count">{github.changes.length}</span>}
+          </button>
+        </nav>
+        <div className="sidebar" hidden={view !== 'explorer'}>
         <FileTree
+          changeStatus={changeStatus}
           filePaths={files.map((file) => file.path)}
           folders={project.folders}
           activePath={activePath}
@@ -58,6 +87,10 @@ export function App() {
           onUpload={project.upload}
           onRemove={project.remove}
         />
+        </div>
+        <div className="sidebar" hidden={view !== 'git'}>
+          <SourceControlPanel github={github} onOpen={project.setActivePath} />
+        </div>
         <section className="editor">
           <div className="editor-tab">{activeFile ? activePath : 'No file open'}</div>
           {project.loadError && <p className="error-block">{project.loadError}</p>}
