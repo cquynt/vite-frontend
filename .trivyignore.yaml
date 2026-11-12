@@ -2,3 +2,8 @@ misconfigurations:
   - id: DS-0002
     paths: [Dockerfile.dev]
     statement: dev-only image, bind-mount cần root để ghi node_modules
+
+licenses:
+  - id: AGPL-3.0-or-later
+    paths: [package-lock.json]
+    statement: texlyre-busytex (BusyTeX WASM) - chấp nhận AGPL; mã nguồn app công khai
