@@ -1,0 +1,40 @@
+- generic [ref=f37e3]:
+  - generic [ref=f37e4]:
+    - complementary [ref=f37e5]:
+      - generic [ref=f37e6]:
+        - generic [ref=f37e7]: EXPLORER
+        - generic [ref=f37e8]:
+          - button "+ File" [ref=f37e9] [cursor=pointer]
+          - button "+ Folder" [ref=f37e10] [cursor=pointer]
+          - button "Upload" [ref=f37e11] [cursor=pointer]
+          - button "Upload dir" [ref=f37e12] [cursor=pointer]
+      - generic [ref=f37e13]: PROJECT
+      - generic [ref=f37e14]:
+        - generic [ref=f37e24]:
+          - generic [ref=f37e25] [cursor=pointer]:
+            - generic [ref=f37e26]: ▾
+            - generic [ref=f37e28]: images
+          - generic [ref=f37e30] [cursor=pointer]:
+            - generic [ref=f37e31]: img
+            - generic [ref=f37e32]: logo.png
+        - generic [ref=f37e34] [cursor=pointer]:
+          - generic [ref=f37e35]: ▸
+          - generic [ref=f37e37]: sections
+          - button "×" [ref=f37e38]
+        - generic [ref=f37e40] [cursor=pointer]:
+          - generic [ref=f37e41]: TeX
+          - generic [ref=f37e42]: main.tex
+        - generic [ref=f37e44] [cursor=pointer]:
+          - generic [ref=f37e45]: bib
+          - generic [ref=f37e46]: references.bib
+    - generic [ref=f37e15]:
+      - generic [ref=f37e16]: main.tex
+      - generic [ref=f37e47]:
+        - generic [aria-hidden]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+        - textbox [ref=f37e48]: "\\documentclass[11pt,a4paper]{article} \\usepackage[T1]{fontenc} \\usepackage[english]{babel} \\babelprovide[import=de,main]{german} \\usepackage{graphicx} \\usepackage[margin=2.5cm]{geometry} \\pagestyle{empty} \\setlength{\\parindent}{0pt} \\setlength{\\parskip}{1em} \\begin{document} \\begin{flushright} \\includegraphics[width=3cm]{images/logo.png} \\end{flushright} Max Mustermann\\\\ Musterstraße 1, 10115 Berlin \\vspace{1cm} Erika Musterfrau\\\\ Beispielweg 2, 80331 München \\hfill Berlin, 12.11.2026 \\textbf{Anfrage zu Angebot Nr. 42 \\& Rabatt 10\\%} Sehr geehrte Frau Musterfrau, vielen Dank für Ihr Angebot. Wir würden gerne mehr über die Konditionen erfahren. \\input{sections/intro} Siehe auch \\cite{knuth1984}. Mit freundlichen Grüßen\\\\ Max Mustermann \\include{sections/appendix} \\bibliographystyle{plain} \\bibliography{references} \\end{document}"
+    - main [ref=f37e17]:
+      - generic [ref=f37e18]: compiling
+      - generic [ref=f37e19]: OUTPUT
+  - contentinfo [ref=f37e21]:
+    - generic [ref=f37e22]: compiling
+    - generic [ref=f37e23]: engine load 830 ms · first - ms · last - ms

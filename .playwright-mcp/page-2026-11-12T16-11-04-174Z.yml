@@ -1,0 +1,18 @@
+- generic [ref=f37e3]:
+  - generic [ref=f37e4]:
+    - complementary [ref=f37e5]:
+      - generic [ref=f37e6]:
+        - generic [ref=f37e7]: EXPLORER
+        - generic [ref=f37e8]:
+          - button "+ File" [ref=f37e9] [cursor=pointer]
+          - button "+ Folder" [ref=f37e10] [cursor=pointer]
+          - button "Upload" [ref=f37e11] [cursor=pointer]
+          - button "Upload dir" [ref=f37e12] [cursor=pointer]
+      - generic [ref=f37e13]: PROJECT
+    - generic [ref=f37e15]: No file open
+    - main [ref=f37e17]:
+      - generic [ref=f37e18]: idle
+      - generic [ref=f37e19]: OUTPUT
+  - contentinfo [ref=f37e21]:
+    - generic [ref=f37e22]: idle
+    - generic [ref=f37e23]: engine load - ms · first - ms · last - ms

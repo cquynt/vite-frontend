@@ -94,7 +94,11 @@ export function FileTree(props: FileTreeProps) {
         <div
           className={`tree-row${isActive ? ' active' : ''}${isSelectedFolder ? ' selected' : ''}`}
           style={{ paddingLeft: 12 + depth * 14 }}
-          onClick={() => (node.isFolder ? toggleFolder(node.path) : onOpen(node.path))}
+          onClick={(event) => {
+            event.stopPropagation()
+            if (node.isFolder) toggleFolder(node.path)
+            else onOpen(node.path)
+          }}
         >
           <span className="tree-arrow">{node.isFolder ? (isOpen ? '▾' : '▸') : ''}</span>
           <span className={`tree-icon ${node.isFolder ? 'icon-folder' : iconClass(node.name)}`} />

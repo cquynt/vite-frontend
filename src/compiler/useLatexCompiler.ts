@@ -1,18 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BusyTexRunner, LuaLatex, PdfLatex, XeLatex } from 'texlyre-busytex'
 import type { FileInput } from 'texlyre-busytex'
-import { resolveProject } from './resolveProject'
-import type { ResolvedFile } from './resolveProject'
+import type { ProjectFile } from '../project/useProject'
 
 export type Engine = 'pdflatex' | 'xelatex' | 'lualatex'
 export type CompilerState = 'idle' | 'loading engine' | 'compiling' | 'done' | 'failed'
 
 export interface CompileRequest {
-  templateName: string
-  mainSource: string
+  mainPath: string
+  files: ProjectFile[]
   engine: Engine
   bibtex: boolean
-  fillSource: (source: string) => string
 }
 
 const assetBase = '/core/busytex'
@@ -49,11 +47,9 @@ export function useLatexCompiler() {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [log, setLog] = useState('')
   const [errors, setErrors] = useState<string[]>([])
-  const [files, setFiles] = useState<ResolvedFile[]>([])
   const [engineLoadMs, setEngineLoadMs] = useState<number | null>(null)
   const [firstCompileMs, setFirstCompileMs] = useState<number | null>(null)
   const [lastCompileMs, setLastCompileMs] = useState<number | null>(null)
-  const [downloadName, setDownloadName] = useState('document.pdf')
 
   const replacePdfUrl = useCallback((url: string | null) => {
     if (pdfUrlRef.current) {
@@ -89,27 +85,19 @@ export function useLatexCompiler() {
   const runCompile = useCallback(
     async (request: CompileRequest) => {
       setMessage('')
-      setErrors([])
-      setLog('')
       try {
+        const main = request.files.find((file) => file.path === request.mainPath)
+        if (!main || typeof main.content !== 'string') {
+          setMessage(`Missing ${request.mainPath}`)
+          setState('failed')
+          return
+        }
         const runner = await ensureRunner()
         setState('compiling')
         const started = performance.now()
-        const resolved = await resolveProject(
-          request.templateName,
-          request.fillSource(request.mainSource),
-          request.fillSource,
-        )
-        setFiles(resolved)
-        const unsupported = resolved.filter((file) => file.status === 'unsupported')
-        if (unsupported.length > 0) {
-          setMessage(`Unsupported files: ${unsupported.map((file) => file.path).join(', ')}`)
-        }
-        const additionalFiles: FileInput[] = resolved.flatMap((file) =>
-          file.status === 'ok' && file.content !== undefined
-            ? [{ path: file.path, content: file.content }]
-            : [],
-        )
+        const additionalFiles: FileInput[] = request.files
+          .filter((file) => file.path !== request.mainPath)
+          .map((file) => ({ path: file.path, content: file.content }))
         const tool =
           request.engine === 'xelatex'
             ? new XeLatex(runner)
@@ -117,7 +105,8 @@ export function useLatexCompiler() {
               ? new LuaLatex(runner)
               : new PdfLatex(runner)
         const result = await tool.compile({
-          input: request.fillSource(request.mainSource),
+          input: main.content,
+          mainTexPath: request.mainPath,
           additionalFiles,
           bibtex: request.bibtex,
           rerun: true,
@@ -134,7 +123,6 @@ export function useLatexCompiler() {
           replacePdfUrl(
             URL.createObjectURL(new Blob([result.pdf as BlobPart], { type: 'application/pdf' })),
           )
-          setDownloadName(`${request.templateName}.pdf`)
           setState('done')
         } else {
           setState('failed')
@@ -165,27 +153,5 @@ export function useLatexCompiler() {
     [runCompile],
   )
 
-  const download = useCallback(() => {
-    if (!pdfUrlRef.current) {
-      return
-    }
-    const link = document.createElement('a')
-    link.href = pdfUrlRef.current
-    link.download = downloadName
-    link.click()
-  }, [downloadName])
-
-  return {
-    state,
-    message,
-    pdfUrl,
-    log,
-    errors,
-    files,
-    engineLoadMs,
-    firstCompileMs,
-    lastCompileMs,
-    compile,
-    download,
-  }
+  return { state, message, pdfUrl, log, errors, engineLoadMs, firstCompileMs, lastCompileMs, compile }
 }
