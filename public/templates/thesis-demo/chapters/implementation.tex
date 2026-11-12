@@ -1,0 +1,14 @@
+\chapter{Implementation}\label{ch:impl}
+
+\section{Project Resolution}
+The compiler scans \verb|\input|, \verb|\include|, \verb|\includegraphics| and
+\verb|\bibliography| commands and fetches each referenced file once.
+
+\begin{definition}
+A project is \emph{resolved} if every referenced file exists.
+\end{definition}
+
+\section{Complexity}
+Resolution visits each file once, so its cost is $O(n)$ for $n$ files, cf.\ Table~\ref{tab:bench}.
+
+\input{chapters/implementation-limits}
