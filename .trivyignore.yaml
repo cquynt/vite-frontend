@@ -1,0 +1,4 @@
+misconfigurations:
+  - id: DS-0002
+    paths: [Dockerfile.dev]
+    statement: dev-only image, bind-mount cần root để ghi node_modules

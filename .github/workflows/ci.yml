@@ -63,7 +63,7 @@ jobs:
       - run: |
           DR_OPTS="-v trivy-cache-fs:/root/.cache" \
             $DR aquasec/trivy:latest fs --scanners vuln,secret,misconfig,license \
-            --severity HIGH,CRITICAL --exit-code 1 --skip-dirs node_modules,dist .
+            --severity HIGH,CRITICAL --exit-code 1 --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist .
 
   # ============ Giai đoạn 2: có image rồi thì quét song song ============
   sec-image:
@@ -82,7 +82,7 @@ jobs:
       - run: docker run -d --name smoke-$GITHUB_RUN_ID $IMAGE
       - run: |
           for i in $(seq 1 30); do
-            if docker exec smoke-$GITHUB_RUN_ID wget -qO- localhost:80/ | grep -q '<div id="root"'; then
+            if docker exec smoke-$GITHUB_RUN_ID wget -qO- localhost:8080/ | grep -q '<div id="root"'; then
               echo "OK: app lên sau ${i}s"; exit 0
             fi
             sleep 1
@@ -99,7 +99,7 @@ jobs:
       - run: docker run -d --name dast-$GITHUB_RUN_ID --network ci-local_default $IMAGE
       - run: |
           for i in $(seq 1 30); do
-            if docker run --rm --network ci-local_default busybox wget -qO- http://dast-$GITHUB_RUN_ID:80/ >/dev/null 2>&1; then
+            if docker run --rm --network ci-local_default busybox wget -qO- http://dast-$GITHUB_RUN_ID:8080/ >/dev/null 2>&1; then
               echo "OK: app sẵn sàng (lần thử $i)"; exit 0
             fi
             sleep 1
@@ -107,7 +107,7 @@ jobs:
           echo "FAIL: app không lên"; docker logs dast-$GITHUB_RUN_ID; exit 1
       - run: |
           docker run --rm --network ci-local_default ghcr.io/zaproxy/zaproxy:stable \
-            zap-baseline.py -t http://dast-$GITHUB_RUN_ID:80 -I
+            zap-baseline.py -t http://dast-$GITHUB_RUN_ID:8080 -I
       - if: always()
         run: docker rm -f dast-$GITHUB_RUN_ID
 
@@ -163,11 +163,11 @@ jobs:
       - name: Deploy (theo digest đã verify)
         run: |
           docker rm -f frontend-app 2>/dev/null || true
-          docker run -d --name frontend-app -p 8082:80 localhost:5001/frontend@$DIGEST
+          docker run -d --name frontend-app -p 8082:8080 localhost:5001/frontend@$DIGEST
       - name: Verify deploy
         run: |
           for i in $(seq 1 30); do
-            if docker exec frontend-app wget -qO- localhost:80/ >/dev/null 2>&1; then
+            if docker exec frontend-app wget -qO- localhost:8080/ >/dev/null 2>&1; then
               echo "OK: frontend-app chạy ở http://localhost:8082"; exit 0
             fi
             sleep 1

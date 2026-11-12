@@ -8,5 +8,6 @@ RUN npm run build
 
 FROM busybox:stable-musl AS runtime
 COPY --from=build /app/dist /www
-EXPOSE 80
-CMD ["httpd", "-f", "-p", "80", "-h", "/www"]
+USER 65534:65534
+EXPOSE 8080
+CMD ["httpd", "-f", "-p", "8080", "-h", "/www"]
