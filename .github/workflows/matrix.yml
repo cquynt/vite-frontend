@@ -1,15 +1,22 @@
 name: matrix
 on:
   push:
-    branches: [main]
+    branches: [main, develop, 'release/**', 'hotfix/**']
     paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
   pull_request:
     paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   matrix:
-    uses: Quy-Organisation/ci-templates/.github/workflows/matrix-test.yml@v1.5
+    uses: Quy-Organisation/ci-templates/.github/workflows/matrix-test.yml@v1.6
     with:
       images: '["node:22-bookworm-slim","node:24-bookworm-slim","node:22-alpine","node:24-alpine"]'
       command: npm ci && npm run lint && npm run build
