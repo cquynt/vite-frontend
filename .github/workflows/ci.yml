@@ -26,11 +26,15 @@ jobs:
 
   scan-source:
     uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.6
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     with:
       sast-configs: --config p/javascript --config p/react
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license
       fs-extra: --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist
+      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/**
 
   scan-image:
     needs: build
