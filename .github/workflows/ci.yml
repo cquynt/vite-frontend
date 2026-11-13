@@ -7,20 +7,38 @@ on:
     paths-ignore: ['**.md', 'docs/**', 'LICENSE', '.gitignore', '.gitattributes']
 
 jobs:
-  ci:
-    uses: Quy-Organisation/ci-templates/.github/workflows/docker-app-ci.yml@v1.2
-    secrets:
-      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+  build:
+    uses: Quy-Organisation/ci-templates/.github/workflows/build.yml@v1.3
     with:
       image-name: frontend
       test-image: node:22-alpine
       test-command: npm ci && npm run lint
       test-opts: -v npm-cache:/root/.npm
+      health-path: /
+      smoke-match: '<div id="root"'
+
+  scan-source:
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.3
+    with:
       sast-configs: --config p/javascript --config p/react
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license
       fs-extra: --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist
+
+  scan-image:
+    needs: build
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-image.yml@v1.3
+    with:
+      image-name: frontend
       health-path: /
-      smoke-match: '<div id="root"'
+
+  deploy:
+    needs: [build, scan-source, scan-image]
+    uses: Quy-Organisation/ci-templates/.github/workflows/deploy.yml@v1.3
+    secrets:
+      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    with:
+      image-name: frontend
       host-port: "8082"
+      health-path: /
