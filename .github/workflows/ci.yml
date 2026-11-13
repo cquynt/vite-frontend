@@ -9,7 +9,9 @@ on:
 jobs:
   ci:
     uses: Quy-Organisation/ci-templates/.github/workflows/docker-app-ci.yml@v1.1
-    secrets: inherit
+    secrets:
+      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     with:
       image-name: frontend
       test-image: node:22-alpine
