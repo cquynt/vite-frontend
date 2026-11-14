@@ -1,5 +1,5 @@
 # P1-02: Web server phục vụ SPA đúng cách và an toàn
-Trạng thái: chưa làm
+Trạng thái: xong
 File: `Dockerfile`, file cấu hình server mới (vd `nginx.conf`)
 
 ## Vấn đề
