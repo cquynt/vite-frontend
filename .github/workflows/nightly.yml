@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   scan-nightly:
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-nightly.yml@v1.11
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-nightly.yml@v1.12
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
