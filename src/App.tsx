@@ -288,7 +288,7 @@ export function App() {
         >
           <div className="tab-row">
             {tabs.map((path) => (
-              <div role="button"
+              <div role="button" tabIndex={0}
                 key={path}
                 className={`tab${path === activePath ? ' active' : ''}`}
                 onClick={() => openFile(path)}
@@ -369,7 +369,7 @@ export function App() {
                   {panelTab === 'output' && <pre>{compiler.log}</pre>}
                   {panelTab === 'problems' &&
                     problems.map((problem, index) => (
-                      <div role="button" key={index} className="tree-row problem" onClick={() => goTo(problem.path, problem.line)}>
+                      <div role="button" tabIndex={0} key={index} className="tree-row problem" onClick={() => goTo(problem.path, problem.line)}>
                         <span className={`problem-${problem.severity}`}>
                           <Icon name={problem.severity === 'error' ? 'error' : 'warning'} size={14} />
                         </span>

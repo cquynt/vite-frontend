@@ -205,7 +205,7 @@ export function LatexEditor({
           return (
             <div key={number} className={index === caretDisplayLine ? 'line-number active' : 'line-number'}>
               <span className="line-digits">{number}</span>
-              <span role="button"
+              <span role="button" tabIndex={0}
                 className={`fold-toggle${line.folded ? ' folded' : ''}${foldable ? '' : ' none'}`}
                 onClick={() => foldable && toggleFold(number)}
               >

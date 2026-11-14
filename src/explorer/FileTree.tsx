@@ -153,7 +153,7 @@ export function FileTree(props: FileTreeProps) {
       <div className="explorer-header">
         <span>EXPLORER</span>
       </div>
-      <div role="button" className="section-header" onClick={() => setSectionOpen(!sectionOpen)}>
+      <div role="button" tabIndex={0} className="section-header" onClick={() => setSectionOpen(!sectionOpen)}>
         <Icon name={sectionOpen ? 'chevronDown' : 'chevronRight'} />
         <span className="section-title">PROJECT</span>
         <span role="presentation" className="section-actions" onClick={(event) => event.stopPropagation()}>
@@ -172,7 +172,7 @@ export function FileTree(props: FileTreeProps) {
         </span>
       </div>
       {sectionOpen && (
-        <div role="button" className="tree" onClick={() => setSelectedFolder('')}>
+        <div role="button" tabIndex={0} className="tree" onClick={() => setSelectedFolder('')}>
           {renderCreating('', 0)}
           {tree.map((node) => renderNode(node, 0))}
         </div>

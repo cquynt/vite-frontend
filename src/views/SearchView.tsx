@@ -62,7 +62,7 @@ export function SearchView({ files, onGoTo, onReplace }: SearchViewProps) {
             {hits
               .filter((hit) => hit.path === path)
               .map((hit) => (
-                <div role="button" key={`${path}:${hit.line}`} className="tree-row" onClick={() => onGoTo(path, hit.line)}>
+                <div role="button" tabIndex={0} key={`${path}:${hit.line}`} className="tree-row" onClick={() => onGoTo(path, hit.line)}>
                   <span className="hit-line">{hit.line}</span>
                   <span className="tree-name">{hit.text}</span>
                 </div>

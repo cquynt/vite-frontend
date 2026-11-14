@@ -53,7 +53,7 @@ export function OutlineView({ fileName, nodes, activeIds, onGoTo, onOpenFile }: 
           }}
         >
           {hasChildren && (
-            <span role="button"
+            <span role="button" tabIndex={0}
               className="tree-arrow"
               onClick={(event) => {
                 event.stopPropagation()
