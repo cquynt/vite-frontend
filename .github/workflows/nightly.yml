@@ -25,5 +25,5 @@ jobs:
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license
       fs-extra: --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist
-      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/**
+      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/** -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
       health-path: /
