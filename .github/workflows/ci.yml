@@ -54,3 +54,18 @@ jobs:
       image-name: frontend
       host-port: "8082"
       health-path: /
+
+  # Required check duy nhất (luôn chạy, kể cả PR chỉ sửa .md)
+  gate:
+    if: always()
+    needs: [build, scan-source, scan-image, deploy]
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    steps:
+      - name: Mọi job chính phải success hoặc skipped
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS"
+          if echo "$NEEDS" | grep -Eq '"result": *"(failure|cancelled)"'; then echo "FAIL: có job chính fail/cancelled"; exit 1; fi
+          echo "OK"
