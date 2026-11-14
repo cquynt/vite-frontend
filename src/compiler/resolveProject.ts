@@ -1,3 +1,4 @@
+import { stripComments } from '../editor/stripComment'
 import { templateUrl } from '../templates/loadTemplate'
 
 export type FileStatus = 'ok' | 'missing' | 'unsupported'
@@ -11,8 +12,6 @@ export interface ResolvedFile {
 
 const imageExtensions = ['.png', '.jpg', '.jpeg', '.pdf']
 const unsupportedExtensions = ['.svg', '.eps']
-
-const stripComments = (source: string) => source.replace(/(?<!\\)%.*$/gm, '')
 
 const splitList = (list: string) =>
   list

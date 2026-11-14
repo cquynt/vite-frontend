@@ -1,3 +1,4 @@
+import { stripComment as withoutComment } from '../editor/stripComment'
 export type SymbolKind =
   | 'preamble'
   | 'packages'
@@ -52,8 +53,6 @@ const pattern = new RegExp(
   ].join('|'),
   'g',
 )
-
-const withoutComment = (line: string) => line.replace(/(?<!\\)%.*$/, '')
 
 const resolveTarget = (name: string, candidates: string[], filePaths: string[]) =>
   [name, ...candidates.map((extension) => `${name}${extension}`)].find((path) => filePaths.includes(path))

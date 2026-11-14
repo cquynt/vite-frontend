@@ -16,7 +16,7 @@ export interface Token {
 }
 
 const tokenPattern =
-  /(%.*$)|(\{\{\w+\}\})|(\\(?:begin|end)\s*\{[^}]*\})|(\\\\|\\[a-zA-Z@]+\*?|\\[^a-zA-Z])|(\$\$[^$]{0,2000}\$\$|\$[^$\n]{0,500}\$)|(\[[^\]\n]{0,500}\])|([{}])|(&)/gm
+  /(%.*$)|(\{\{\w{1,100}\}\})|(\\(?:begin|end)\s{0,20}\{[^}\n]{0,200}\})|(\\\\|\\[a-zA-Z@]+\*?|\\[^a-zA-Z])|(\$\$[^$]{0,2000}\$\$|\$[^$\n]{0,500}\$)|(\[[^\]\n]{0,500}\])|([{}])|(&)/gm
 
 const kinds: TokenKind[] = ['comment', 'placeholder', 'environment', 'command', 'math', 'option', 'brace', 'operator']
 
