@@ -30,7 +30,7 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     with:
-      sonar-required: false  # chưa xác nhận SONAR_TOKEN/SONAR_HOST_URL ở org; đặt secret rồi bỏ dòng này
+      sonar-required: true  # chưa xác nhận SONAR_TOKEN/SONAR_HOST_URL ở org; đặt secret rồi bỏ dòng này
       sast-configs: --config p/javascript --config p/react
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license
