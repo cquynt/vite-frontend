@@ -1,6 +1,6 @@
 const indentUnit = '  '
 
-const stripComment = (line: string) => line.replace(/(^|[^\\])%.*$/, '$1')
+const stripComment = (line: string) => line.replace(/(?<!\\)%.*$/, '')
 
 const countEnvironments = (line: string, keyword: 'begin' | 'end') =>
   Array.from(line.matchAll(new RegExp(`\\\\${keyword}\\{([^}]+)\\}`, 'g'))).filter(

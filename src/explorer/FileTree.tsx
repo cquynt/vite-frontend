@@ -81,7 +81,7 @@ export function FileTree(props: FileTreeProps) {
         <span className={`tree-icon ${creating.isFolder ? 'icon-folder' : 'icon-file'}`} />
         <input
           className="tree-input"
-          autoFocus
+          ref={(element) => element?.focus()}
           onBlur={(event) => commitCreating(event.target.value)}
           onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') commitCreating(event.currentTarget.value)
@@ -97,7 +97,7 @@ export function FileTree(props: FileTreeProps) {
     const status = changeStatus[node.path]
     return (
       <div key={node.path}>
-        <div
+        <div role="button"
           tabIndex={-1}
           className={`tree-row${isActive ? ' active' : ''}${node.isFolder && node.path === selectedFolder ? ' selected' : ''}`}
           style={{ paddingLeft: indentBase + depth * indentStep + (node.isFolder ? 0 : 16) }}
@@ -153,10 +153,10 @@ export function FileTree(props: FileTreeProps) {
       <div className="explorer-header">
         <span>EXPLORER</span>
       </div>
-      <div className="section-header" onClick={() => setSectionOpen(!sectionOpen)}>
+      <div role="button" className="section-header" onClick={() => setSectionOpen(!sectionOpen)}>
         <Icon name={sectionOpen ? 'chevronDown' : 'chevronRight'} />
         <span className="section-title">PROJECT</span>
-        <span className="section-actions" onClick={(event) => event.stopPropagation()}>
+        <span role="presentation" className="section-actions" onClick={(event) => event.stopPropagation()}>
           <button type="button" title="New file" onClick={() => startCreating(false)}>
             <Icon name="newFile" />
           </button>
@@ -172,7 +172,7 @@ export function FileTree(props: FileTreeProps) {
         </span>
       </div>
       {sectionOpen && (
-        <div className="tree" onClick={() => setSelectedFolder('')}>
+        <div role="button" className="tree" onClick={() => setSelectedFolder('')}>
           {renderCreating('', 0)}
           {tree.map((node) => renderNode(node, 0))}
         </div>

@@ -156,6 +156,7 @@ describe('App', () => {
     fireEvent.click(screen.getByTitle('Toggle sidebar (Ctrl/Cmd+B)'))
     fireEvent.click(screen.getByTitle('Build'))
     fireEvent.click(screen.getByText('Download PDF'))
+    expect((screen.getByTitle('Download PDF') as HTMLButtonElement).disabled).toBe(true)
   })
 
   it('folds all and unfolds all blocks', async () => {

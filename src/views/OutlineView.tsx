@@ -43,7 +43,7 @@ export function OutlineView({ fileName, nodes, activeIds, onGoTo, onOpenFile }: 
     const isActive = activeIds.has(node.id)
     return (
       <div key={node.id}>
-        <div
+        <div role="button"
           tabIndex={-1}
           className={`tree-row outline-row${isActive ? ' outline-active' : ''}`}
           style={{ paddingLeft: 8 + depth * 14 + (hasChildren ? 0 : 16) }}
@@ -53,7 +53,7 @@ export function OutlineView({ fileName, nodes, activeIds, onGoTo, onOpenFile }: 
           }}
         >
           {hasChildren && (
-            <span
+            <span role="button"
               className="tree-arrow"
               onClick={(event) => {
                 event.stopPropagation()

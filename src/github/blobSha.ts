@@ -9,6 +9,6 @@ export async function blobSha(content: string | Uint8Array) {
   const data = new Uint8Array(header.byteLength + body.byteLength)
   data.set(header)
   data.set(body, header.byteLength)
-  const digest = await crypto.subtle.digest('SHA-1', data)
+  const digest = await crypto.subtle.digest('SHA-1', data) // NOSONAR: git blob ids are SHA-1 by definition
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
 }

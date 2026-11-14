@@ -76,6 +76,8 @@ export function useGitHub(files: ProjectFile[], replaceAll: (files: ProjectFile[
         if (!current.has(path)) list.push({ path, status: 'D' })
       }
       if (!cancelled) setChanges(list)
+    }).catch(() => {
+      if (!cancelled) setChanges([])
     })
     return () => {
       cancelled = true

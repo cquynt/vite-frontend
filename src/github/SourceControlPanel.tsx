@@ -91,7 +91,7 @@ export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) 
           <div className="scm-section">CHANGES ({changes.length})</div>
           <div className="scm-list">
             {changes.map((change) => (
-              <div
+              <div role="button"
                 key={change.path}
                 className="tree-row"
                 onClick={() => change.status !== 'D' && onOpen(change.path)}

@@ -12,7 +12,7 @@ export interface ResolvedFile {
 const imageExtensions = ['.png', '.jpg', '.jpeg', '.pdf']
 const unsupportedExtensions = ['.svg', '.eps']
 
-const stripComments = (source: string) => source.replace(/(^|[^\\])%.*$/gm, '$1')
+const stripComments = (source: string) => source.replace(/(?<!\\)%.*$/gm, '')
 
 const splitList = (list: string) =>
   list
@@ -39,9 +39,9 @@ function scanReferences(source: string): Reference[] {
     }
   }
   collect(/\\(?:input|include)\s*\{([^}]+)\}/g, 'tex')
-  collect(/\\includegraphics\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}/g, 'image')
-  collect(/\\(?:bibliography|addbibresource)\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}/g, 'bib')
-  collect(/\\usepackage\s*(?:\[[^\]]*\])?\s*\{([^}]+)\}/g, 'package')
+  collect(/\\includegraphics\s*(?:\[[^\]]*\]\s*)?\{([^}]+)\}/g, 'image')
+  collect(/\\(?:bibliography|addbibresource)\s*(?:\[[^\]]*\]\s*)?\{([^}]+)\}/g, 'bib')
+  collect(/\\usepackage\s*(?:\[[^\]]*\]\s*)?\{([^}]+)\}/g, 'package')
   return references
 }
 
