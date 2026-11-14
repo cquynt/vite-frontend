@@ -1,5 +1,5 @@
 # P1-01: Unit test và coverage trong CI
-Trạng thái: chưa làm
+Trạng thái: xong
 File: `package.json`, `.github/workflows/ci.yml`, `vite.config.ts`
 
 ## Vấn đề

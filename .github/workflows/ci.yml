@@ -19,7 +19,7 @@ jobs:
     with:
       image-name: frontend
       test-image: node:22-alpine
-      test-command: npm ci && npm run lint
+      test-command: npm ci && npm run lint && npm run test:coverage
       test-opts: -v npm-cache:/root/.npm
       health-path: /
       smoke-match: '<div id="root"'
@@ -34,7 +34,7 @@ jobs:
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license
       fs-extra: --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist
-      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/**
+      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/** -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
 
   scan-image:
     needs: build
