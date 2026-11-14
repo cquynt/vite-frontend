@@ -1,0 +1,23 @@
+name: nightly-security
+on:
+  schedule:
+    - cron: '0 19 * * *'   # 19:00 UTC = 02:00 giờ VN (UTC+7)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan-nightly:
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-nightly.yml@v1.9
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    with:
+      image-name: frontend
+      sast-configs: --config p/javascript --config p/react
+      sast-extra: --exclude node_modules --exclude dist
+      fs-scanners: vuln,secret,misconfig,license
+      fs-extra: --ignorefile .trivyignore.yaml --skip-dirs node_modules,dist
+      sonar-extra: -Dsonar.exclusions=**/node_modules/**,**/dist/**
+      health-path: /
