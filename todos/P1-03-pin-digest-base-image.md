@@ -1,5 +1,5 @@
 # P1-03: Pin base image theo digest
-Trạng thái: chưa làm
+Trạng thái: xong
 File: `Dockerfile`, `Dockerfile.dev`, `.github/workflows/ci.yml`, `matrix.yml`
 
 ## Việc cần làm
