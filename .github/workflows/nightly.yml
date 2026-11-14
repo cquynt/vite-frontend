@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   scan-nightly:
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-nightly.yml@v1.13
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-nightly.yml@v1.14
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -20,6 +20,7 @@ jobs:
       MAIL_TO: ${{ secrets.MAIL_TO }}
     with:
       image-name: frontend
+      sonar-required: false  # chưa xác nhận SONAR_TOKEN/SONAR_HOST_URL ở org; đặt secret rồi bỏ dòng này
       sast-configs: --config p/javascript --config p/react
       sast-extra: --exclude node_modules --exclude dist
       fs-scanners: vuln,secret,misconfig,license

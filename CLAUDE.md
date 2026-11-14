@@ -1,6 +1,6 @@
 # frontend
 
-React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `busybox httpd` chạy non-root cổng 8080. Có `worker/` và `wrangler.jsonc` cho Cloudflare.
+React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `nginx-unprivileged` chạy non-root cổng 8080. Có `worker/` và `wrangler.jsonc` cho Cloudflare.
 
 ## Lệnh
 - `npm ci`, `npm run lint`, `npm run build`, test bằng vitest.

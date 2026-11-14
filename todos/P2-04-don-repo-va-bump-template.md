@@ -1,5 +1,5 @@
 # P2-04: Dọn repo và bump template
-Trạng thái: chưa làm
+Trạng thái: xong
 File: `.gitignore`, `.github/workflows/*.yml`, `.dockerignore`
 
 ## Việc cần làm
