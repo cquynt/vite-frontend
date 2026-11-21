@@ -21,4 +21,4 @@ React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `n
 Luật semgrep ở `.semgrep/`, danh sách ở `docs/ai-mistakes.md`. Lỗi AI lặp lại lần 2 thì thêm luật + test, đừng chỉ ghi vào đây. Chạy `sh .githooks/ai-guard.sh test|scan`.
 
 ## Việc cần làm
-Task nằm trong `todos/`, mỗi file một task độc lập, dòng 2 là `Trạng thái: todo|doing|blocked|xong`. Làm theo thứ tự tiền tố `P0` → `P1` → `P2`. Mỗi task giao cho đúng một sub-agent, mỗi lần chỉ chạy một sub-agent; sub-agent báo kết quả về main agent khi xong (main agent không làm lại việc đó). Task xong thì đổi `Trạng thái: xong` rồi `git mv` sang `done/`. Task phụ thuộc `ci-templates` ghi rõ tag tối thiểu cần dùng.
+Task nằm trong `__todos/`, mỗi file một task độc lập, dòng 2 là `Trạng thái: todo|doing|blocked|xong`. Làm theo thứ tự tiền tố `P0` → `P1` → `P2`. Mỗi task giao cho đúng một sub-agent, mỗi lần chỉ chạy một sub-agent; sub-agent báo kết quả về main agent khi xong (main agent không làm lại việc đó). Task xong thì đổi `Trạng thái: xong` rồi `git mv` sang `__done/`. Task phụ thuộc `ci-templates` ghi rõ tag tối thiểu cần dùng.
