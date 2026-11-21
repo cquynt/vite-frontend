@@ -1,7 +1,7 @@
-import { snippetGroups } from './snippets'
+import { snippetGroups } from "./snippets";
 
 interface SnippetsViewProps {
-  onInsert: (text: string) => void
+  onInsert: (text: string) => void;
 }
 
 export function SnippetsView({ onInsert }: SnippetsViewProps) {
@@ -15,7 +15,13 @@ export function SnippetsView({ onInsert }: SnippetsViewProps) {
           <div key={group.title}>
             <div className="scm-section">{group.title}</div>
             {group.items.map((item) => (
-              <div role="button" tabIndex={0} key={item.label} className="tree-row" onClick={() => onInsert(item.text)}>
+              <div
+                role="button"
+                tabIndex={0}
+                key={item.label}
+                className="tree-row"
+                onClick={() => onInsert(item.text)}
+              >
                 <span className="tree-name">{item.label}</span>
               </div>
             ))}
@@ -23,5 +29,5 @@ export function SnippetsView({ onInsert }: SnippetsViewProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,130 +1,130 @@
-import { useCallback, useEffect, useState } from 'react'
-import { fillTemplate } from '../compiler/fillTemplate'
-import { resolveProject } from '../compiler/resolveProject'
-import { loadTemplate, templateNames } from '../templates/loadTemplate'
+import { useCallback, useEffect, useState } from "react";
+import { fillTemplate } from "../compiler/fillTemplate";
+import { resolveProject } from "../compiler/resolveProject";
+import { loadTemplate, templateNames } from "../templates/loadTemplate";
 
 export interface ProjectFile {
-  path: string
-  content: string | Uint8Array
+  path: string;
+  content: string | Uint8Array;
 }
 
-const defaultMainPath = 'main.tex'
+const defaultMainPath = "main.tex";
 
 export function findMainPath(files: ProjectFile[]) {
   if (files.some((file) => file.path === defaultMainPath)) {
-    return defaultMainPath
+    return defaultMainPath;
   }
   const documentFile = files.find(
-    (file) => typeof file.content === 'string' && file.content.includes('\\documentclass'),
-  )
-  return documentFile?.path ?? files[0]?.path ?? defaultMainPath
+    (file) => typeof file.content === "string" && file.content.includes("\\documentclass"),
+  );
+  return documentFile?.path ?? files[0]?.path ?? defaultMainPath;
 }
 
-const textExtensions = ['.tex', '.bib', '.sty', '.cls', '.bst', '.txt', '.md', '.cfg', '.def']
+const textExtensions = [".tex", ".bib", ".sty", ".cls", ".bst", ".txt", ".md", ".cfg", ".def"];
 
 export const isTextPath = (path: string) =>
-  textExtensions.some((extension) => path.toLowerCase().endsWith(extension))
+  textExtensions.some((extension) => path.toLowerCase().endsWith(extension));
 
 export const normalizePath = (path: string) =>
   path
-    .split('/')
+    .split("/")
     .map((part) => part.trim())
     .filter(Boolean)
-    .join('/')
+    .join("/");
 
-const joinPath = (parent: string, name: string) => normalizePath(parent ? `${parent}/${name}` : name)
+const joinPath = (parent: string, name: string) =>
+  normalizePath(parent ? `${parent}/${name}` : name);
 
 export function useProject() {
-  const [files, setFiles] = useState<ProjectFile[]>([])
-  const [folders, setFolders] = useState<string[]>([])
-  const [activePath, setActivePath] = useState(defaultMainPath)
-  const [loadError, setLoadError] = useState('')
+  const [files, setFiles] = useState<ProjectFile[]>([]);
+  const [folders, setFolders] = useState<string[]>([]);
+  const [activePath, setActivePath] = useState(defaultMainPath);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     const load = async () => {
-      const template = await loadTemplate(templateNames[0])
-      const fill = (source: string) => fillTemplate(source, template.fields, {})
-      const main = fill(template.mainSource)
-      const resolved = await resolveProject(template.name, main, fill)
-      const loaded: ProjectFile[] = [{ path: defaultMainPath, content: main }]
+      const template = await loadTemplate(templateNames[0]);
+      const fill = (source: string) => fillTemplate(source, template.fields, {});
+      const main = fill(template.mainSource);
+      const resolved = await resolveProject(template.name, main, fill);
+      const loaded: ProjectFile[] = [{ path: defaultMainPath, content: main }];
       for (const file of resolved) {
-        if (file.status === 'ok' && file.content !== undefined) {
-          loaded.push({ path: file.path, content: file.content })
+        if (file.status === "ok" && file.content !== undefined) {
+          loaded.push({ path: file.path, content: file.content });
         }
       }
-      setFiles(loaded)
-    }
-    load().catch((error: Error) => setLoadError(error.message))
-  }, [])
+      setFiles(loaded);
+    };
+    load().catch((error: Error) => setLoadError(error.message));
+  }, []);
 
   const updateText = useCallback((path: string, text: string) => {
     setFiles((current) =>
       current.map((file) => (file.path === path ? { path, content: text } : file)),
-    )
-  }, [])
+    );
+  }, []);
 
   const putFiles = useCallback((added: ProjectFile[]) => {
     setFiles((current) => {
-      const addedPaths = new Set(added.map((file) => file.path))
-      return [...current.filter((file) => !addedPaths.has(file.path)), ...added]
-    })
-  }, [])
+      const addedPaths = new Set(added.map((file) => file.path));
+      return [...current.filter((file) => !addedPaths.has(file.path)), ...added];
+    });
+  }, []);
 
-  const createFile = useCallback(
-    (parent: string, name: string) => {
-      const path = joinPath(parent, name)
-      if (!path) {
-        return
-      }
-      setFiles((current) =>
-        current.some((file) => file.path === path) ? current : [...current, { path, content: '' }],
-      )
-      setActivePath(path)
-    },
-    [],
-  )
+  const createFile = useCallback((parent: string, name: string) => {
+    const path = joinPath(parent, name);
+    if (!path) {
+      return;
+    }
+    setFiles((current) =>
+      current.some((file) => file.path === path) ? current : [...current, { path, content: "" }],
+    );
+    setActivePath(path);
+  }, []);
 
   const createFolder = useCallback((parent: string, name: string) => {
-    const path = joinPath(parent, name)
+    const path = joinPath(parent, name);
     if (path) {
-      setFolders((current) => (current.includes(path) ? current : [...current, path]))
+      setFolders((current) => (current.includes(path) ? current : [...current, path]));
     }
-  }, [])
+  }, []);
 
   const upload = useCallback(
     async (uploaded: File[], parent: string) => {
-      const added: ProjectFile[] = []
+      const added: ProjectFile[] = [];
       for (const file of uploaded) {
-        const relative = file.webkitRelativePath || file.name
-        const path = joinPath(parent, relative)
+        const relative = file.webkitRelativePath || file.name;
+        const path = joinPath(parent, relative);
         const content = isTextPath(path)
           ? await file.text()
-          : new Uint8Array(await file.arrayBuffer())
-        added.push({ path, content })
+          : new Uint8Array(await file.arrayBuffer());
+        added.push({ path, content });
       }
-      putFiles(added)
+      putFiles(added);
       if (added.length > 0) {
-        setActivePath(added[0].path)
+        setActivePath(added[0].path);
       }
     },
     [putFiles],
-  )
+  );
 
   const replaceAll = useCallback((next: ProjectFile[]) => {
-    setFiles(next)
-    setFolders([])
-    setActivePath(findMainPath(next))
-  }, [])
+    setFiles(next);
+    setFolders([]);
+    setActivePath(findMainPath(next));
+  }, []);
 
   const remove = useCallback((path: string, isFolder: boolean) => {
-    const prefix = `${path}/`
+    const prefix = `${path}/`;
     setFiles((current) =>
       current.filter((file) => (isFolder ? !file.path.startsWith(prefix) : file.path !== path)),
-    )
+    );
     if (isFolder) {
-      setFolders((current) => current.filter((folder) => folder !== path && !folder.startsWith(prefix)))
+      setFolders((current) =>
+        current.filter((folder) => folder !== path && !folder.startsWith(prefix)),
+      );
     }
-  }, [])
+  }, []);
 
   return {
     files,
@@ -138,5 +138,5 @@ export function useProject() {
     upload,
     remove,
     replaceAll,
-  }
+  };
 }

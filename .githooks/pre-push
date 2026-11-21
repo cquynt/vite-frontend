@@ -1,0 +1,8 @@
+#!/bin/sh
+# pre-push: format check + lint. Sửa format: npm run format
+set -e
+cd "$(git rev-parse --show-toplevel)"
+echo "[pre-push] frontend: format:check"
+npm run -s format:check || { echo "Chạy 'npm run format' rồi commit lại."; exit 1; }
+echo "[pre-push] frontend: lint"
+npm run -s lint

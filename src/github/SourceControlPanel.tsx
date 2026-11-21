@@ -1,32 +1,32 @@
-import { useState } from 'react'
-import type { useGitHub } from './useGitHub'
+import { useState } from "react";
+import type { useGitHub } from "./useGitHub";
 
 interface SourceControlPanelProps {
-  github: ReturnType<typeof useGitHub>
-  onOpen: (path: string) => void
+  github: ReturnType<typeof useGitHub>;
+  onOpen: (path: string) => void;
 }
 
-const formatDate = (iso: string) => new Date(iso).toLocaleString()
+const formatDate = (iso: string) => new Date(iso).toLocaleString();
 
 export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) {
-  const [message, setMessage] = useState('')
-  const [confirmPull, setConfirmPull] = useState(false)
-  const { connection, changes, commits, busy } = github
+  const [message, setMessage] = useState("");
+  const [confirmPull, setConfirmPull] = useState(false);
+  const { connection, changes, commits, busy } = github;
 
   const handlePull = () => {
     if (changes.length > 0 && !confirmPull) {
-      setConfirmPull(true)
-      return
+      setConfirmPull(true);
+      return;
     }
-    setConfirmPull(false)
-    github.pull()
-  }
+    setConfirmPull(false);
+    github.pull();
+  };
 
   const handleCommit = async () => {
     if (await github.commit(message.trim())) {
-      setMessage('')
+      setMessage("");
     }
-  }
+  };
 
   return (
     <div className="scm">
@@ -51,11 +51,17 @@ export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) 
             value={github.token}
             onChange={(event) => github.setToken(event.target.value)}
           />
-          <button type="button" className="primary" disabled={!!busy || !github.repoInput} onClick={github.connect}>
+          <button
+            type="button"
+            className="primary"
+            disabled={!!busy || !github.repoInput}
+            onClick={github.connect}
+          >
             Connect
           </button>
           <p className="scm-hint">
-            Fine-grained token with Contents: read and write on the repository. It is kept in this tab only.
+            Fine-grained token with Contents: read and write on the repository. It is kept in this
+            tab only.
           </p>
         </div>
       )}
@@ -85,16 +91,18 @@ export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) 
               Commit &amp; Push
             </button>
             <button type="button" disabled={!!busy} onClick={handlePull}>
-              {confirmPull ? `Discard ${changes.length} changes and pull` : 'Pull'}
+              {confirmPull ? `Discard ${changes.length} changes and pull` : "Pull"}
             </button>
           </div>
           <div className="scm-section">CHANGES ({changes.length})</div>
           <div className="scm-list">
             {changes.map((change) => (
-              <div role="button" tabIndex={0}
+              <div
+                role="button"
+                tabIndex={0}
                 key={change.path}
                 className="tree-row"
-                onClick={() => change.status !== 'D' && onOpen(change.path)}
+                onClick={() => change.status !== "D" && onOpen(change.path)}
               >
                 <span className="tree-name">{change.path}</span>
                 <span className={`tree-status status-${change.status}`}>{change.status}</span>
@@ -105,7 +113,7 @@ export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) 
           <div className="scm-list history">
             {commits.map((commit) => (
               <div key={commit.sha} className="commit">
-                <div className="commit-message">{commit.message.split('\n')[0]}</div>
+                <div className="commit-message">{commit.message.split("\n")[0]}</div>
                 <div className="commit-meta">
                   {commit.sha.slice(0, 7)} · {commit.author} · {formatDate(commit.date)}
                 </div>
@@ -121,5 +129,5 @@ export function SourceControlPanel({ github, onOpen }: SourceControlPanelProps) 
       {github.info && <p className="scm-status">{github.info}</p>}
       {github.error && <p className="error-block">{github.error}</p>}
     </div>
-  )
+  );
 }

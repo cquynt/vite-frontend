@@ -1,19 +1,19 @@
-import type { CompilerState, Engine } from '../compiler/useLatexCompiler'
+import type { CompilerState, Engine } from "../compiler/useLatexCompiler";
 
 interface BuildViewProps {
-  texFiles: string[]
-  mainPath: string
-  engine: Engine
-  bibtex: boolean
-  autoCompile: boolean
-  state: CompilerState
-  hasPdf: boolean
-  onMainChange: (path: string) => void
-  onEngineChange: (engine: Engine) => void
-  onBibtexChange: (value: boolean) => void
-  onAutoCompileChange: (value: boolean) => void
-  onCompile: () => void
-  onDownload: () => void
+  texFiles: string[];
+  mainPath: string;
+  engine: Engine;
+  bibtex: boolean;
+  autoCompile: boolean;
+  state: CompilerState;
+  hasPdf: boolean;
+  onMainChange: (path: string) => void;
+  onEngineChange: (engine: Engine) => void;
+  onBibtexChange: (value: boolean) => void;
+  onAutoCompileChange: (value: boolean) => void;
+  onCompile: () => void;
+  onDownload: () => void;
 }
 
 export function BuildView(props: BuildViewProps) {
@@ -25,7 +25,10 @@ export function BuildView(props: BuildViewProps) {
       <div className="scm-form">
         <label>
           Main file
-          <select value={props.mainPath} onChange={(event) => props.onMainChange(event.target.value)}>
+          <select
+            value={props.mainPath}
+            onChange={(event) => props.onMainChange(event.target.value)}
+          >
             {props.texFiles.map((path) => (
               <option key={path} value={path}>
                 {path}
@@ -35,14 +38,21 @@ export function BuildView(props: BuildViewProps) {
         </label>
         <label>
           Engine
-          <select value={props.engine} onChange={(event) => props.onEngineChange(event.target.value as Engine)}>
+          <select
+            value={props.engine}
+            onChange={(event) => props.onEngineChange(event.target.value as Engine)}
+          >
             <option value="pdflatex">pdfLaTeX</option>
             <option value="xelatex">XeLaTeX</option>
             <option value="lualatex">LuaLaTeX</option>
           </select>
         </label>
         <label className="check">
-          <input type="checkbox" checked={props.bibtex} onChange={(event) => props.onBibtexChange(event.target.checked)} />
+          <input
+            type="checkbox"
+            checked={props.bibtex}
+            onChange={(event) => props.onBibtexChange(event.target.checked)}
+          />
           Run bibtex
         </label>
         <label className="check">
@@ -56,7 +66,7 @@ export function BuildView(props: BuildViewProps) {
         <button
           type="button"
           className="primary"
-          disabled={props.state === 'compiling' || props.state === 'loading engine'}
+          disabled={props.state === "compiling" || props.state === "loading engine"}
           onClick={props.onCompile}
         >
           Compile now
@@ -66,5 +76,5 @@ export function BuildView(props: BuildViewProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }

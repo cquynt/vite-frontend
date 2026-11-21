@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "preview": "vite preview",
-    "deploy:cloudflare": "bash scripts/deploy-cloudflare.sh"
+    "deploy:cloudflare": "bash scripts/deploy-cloudflare.sh",
+    "format": "oxfmt src worker vite.config.ts",
+    "format:check": "oxfmt --check src worker vite.config.ts"
   },
   "dependencies": {
     "react": "^19.3.1",
@@ -25,6 +27,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "^5.1.0",
     "jsdom": "^29.1.1",
+    "oxfmt": "^0.79.0",
     "oxlint": "^1.90.0",
     "typescript": "7.0.2",
     "vite": "^8.3.6",
