@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "oxlint",
+    "lint": "oxlint --ignore-pattern .semgrep",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "preview": "vite preview",
