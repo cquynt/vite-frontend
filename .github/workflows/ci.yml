@@ -15,17 +15,18 @@ concurrency:
 
 jobs:
   build:
-    uses: Quy-Organisation/ci-templates/.github/workflows/build.yml@v1.14
+    uses: Quy-Organisation/ci-templates/.github/workflows/build.yml@v1.15
     with:
       image-name: frontend
       test-image: node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
-      test-command: npm ci && npm run lint && npm run test:coverage
+      test-command: npm ci && npm run test:coverage
+      lint-command: npm ci && npm run lint && npm run format:check
       test-opts: -v npm-cache:/root/.npm
       health-path: /
       smoke-match: '<div id="root"'
 
   scan-source:
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.14
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.15
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -39,14 +40,14 @@ jobs:
 
   scan-image:
     needs: build
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-image.yml@v1.14
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-image.yml@v1.15
     with:
       image-name: frontend
       health-path: /
 
   deploy:
     needs: [build, scan-source, scan-image]
-    uses: Quy-Organisation/ci-templates/.github/workflows/deploy.yml@v1.14
+    uses: Quy-Organisation/ci-templates/.github/workflows/deploy.yml@v1.15
     secrets:
       COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
