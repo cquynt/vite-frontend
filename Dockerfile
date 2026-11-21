@@ -10,7 +10,15 @@ RUN npm run build
 FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03 AS runtime
 USER root
 ARG APK_REFRESH=0
-RUN apk upgrade --no-cache
+# nginx.org ghim cứng nginx trong /etc/apk/world nên apk upgrade không vá được:
+# gỡ nginx + module nginx.org, cài lại nginx từ repo Alpine (module động không dùng, nginx.conf không load_module).
+# Giữ nguyên nginx.conf của image gốc (pid /tmp/nginx.pid, temp path /tmp) vì gói Alpine sẽ ghi đè bằng cấu hình khác.
+RUN cp /etc/nginx/nginx.conf /tmp/nginx.conf.orig \
+    && apk del nginx nginx-module-geoip nginx-module-image-filter nginx-module-njs nginx-module-xslt \
+    && apk add --no-cache 'nginx>=1.30.7' \
+    && apk upgrade --no-cache \
+    && cp /tmp/nginx.conf.orig /etc/nginx/nginx.conf \
+    && rm -f /tmp/nginx.conf.orig /etc/nginx/nginx.conf.apk-new
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=build /app/dist /usr/share/nginx/html
