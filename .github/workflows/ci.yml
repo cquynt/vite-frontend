@@ -75,3 +75,4 @@ jobs:
           echo "$NEEDS"
           if echo "$NEEDS" | grep -Eq '"result": *"(failure|cancelled)"'; then echo "FAIL: có job chính fail/cancelled"; exit 1; fi
           echo "OK"
+# thử nhánh dev
