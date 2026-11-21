@@ -1,8 +1,26 @@
 #!/bin/sh
 # pre-push: format check + lint. Sửa format: npm run format
+# Push inner (mirror) đã được kiểm tra ở lần push ngoài.
+[ -n "$PREPUSH_MIRROR" ] && exit 0
+remote="$1"
+refs=$(cat)
 set -e
 cd "$(git rev-parse --show-toplevel)"
 echo "[pre-push] frontend: format:check"
 npm run -s format:check || { echo "Chạy 'npm run format' rồi commit lại."; exit 1; }
 echo "[pre-push] frontend: lint"
 npm run -s lint
+
+# Mirror: push lên remote còn lại (local <-> origin).
+case "$remote" in
+  local) other=origin ;;
+  origin) other=local ;;
+  *) exit 0 ;;
+esac
+git remote get-url "$other" >/dev/null 2>&1 || exit 0
+echo "$refs" | while read -r lref lsha rref rsha; do
+  [ -z "$lref" ] && continue
+  case "$lsha" in 0000000*) continue ;; esac  # xóa ref: bỏ qua
+  echo "[pre-push] mirror: $lref -> $other"
+  PREPUSH_MIRROR=1 git push "$other" "$lref:$rref" || exit 1
+done
