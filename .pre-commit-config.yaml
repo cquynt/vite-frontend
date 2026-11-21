@@ -1,0 +1,18 @@
+# Cài: pip install pre-commit (repo dùng core.hooksPath=.githooks nên KHÔNG chạy `pre-commit install`;
+# .githooks/pre-commit và .githooks/pre-push gọi `pre-commit run` thay).
+# Chạy tay: pre-commit run --all-files
+repos:
+  - repo: local
+    hooks:
+      - id: ai-guard-rules-test
+        name: ai-guard test luật (.semgrep)
+        entry: sh .githooks/ai-guard.sh test
+        language: system
+        files: ^\.semgrep/
+        pass_filenames: false
+      - id: ai-guard-scan
+        name: ai-guard quét lỗi AI hay gặp
+        entry: sh .githooks/ai-guard.sh scan
+        language: system
+        pass_filenames: false
+        always_run: true

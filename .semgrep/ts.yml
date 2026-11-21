@@ -1,0 +1,68 @@
+# Lỗi AI hay gặp ở TypeScript/React. Thêm luật: xem docs/ai-mistakes.md. Test: semgrep --test .semgrep
+rules:
+  - id: ai-console-log-left-in
+    languages: [typescript]
+    severity: ERROR
+    message: console.log/debug còn sót lại. Xóa, hoặc dùng logger của dự án.
+    pattern-either:
+      - pattern: console.log(...)
+      - pattern: console.debug(...)
+    paths:
+      exclude: ["**/*.test.*", "**/*.spec.*", "**/test/**", "**/scripts/**"]
+
+  - id: ai-ts-suppress-comment
+    languages: [generic]
+    severity: ERROR
+    message: "@ts-ignore/@ts-nocheck che lỗi kiểu. Sửa kiểu cho đúng, hoặc dùng @ts-expect-error kèm lý do."
+    pattern-regex: '@ts-(ignore|nocheck)\b'
+    paths:
+      include: ["**/*.ts", "**/*.tsx"]
+
+  - id: ai-explicit-any
+    languages: [typescript]
+    severity: ERROR
+    message: Dùng any làm mất kiểm tra kiểu. Dùng unknown + thu hẹp kiểu, hoặc khai báo kiểu cụ thể.
+    pattern-either:
+      - pattern: $X as any
+      - pattern: "($P: any) => $B"
+      - pattern: "function $F(..., $P: any, ...) { ... }"
+    paths:
+      exclude: ["**/*.test.*", "**/*.spec.*"]
+
+  - id: ai-test-focused-or-skipped
+    languages: [typescript]
+    severity: ERROR
+    message: ".only/.skip/xit/fit để lại làm CI bỏ qua test. Gỡ trước khi commit."
+    pattern-either:
+      - pattern: describe.only(...)
+      - pattern: it.only(...)
+      - pattern: test.only(...)
+      - pattern: describe.skip(...)
+      - pattern: it.skip(...)
+      - pattern: test.skip(...)
+
+  - id: ai-fake-assertion
+    languages: [typescript]
+    severity: ERROR
+    message: Assertion luôn đúng, test không kiểm tra gì. Viết assertion trên hành vi thật.
+    pattern-either:
+      - pattern: expect(true).toBe(true)
+      - pattern: expect(true).toBeTruthy()
+      - pattern: expect(false).toBe(false)
+      - pattern: expect(1).toBe(1)
+
+  - id: ai-empty-catch
+    languages: [typescript]
+    severity: ERROR
+    message: catch rỗng nuốt lỗi. Xử lý, log, hoặc ném lại.
+    pattern: |
+      try { ... } catch ($E) {}
+
+  - id: ai-hardcoded-localhost
+    languages: [generic]
+    severity: ERROR
+    message: URL localhost viết cứng trong code. Lấy từ import.meta.env hoặc cấu hình.
+    pattern-regex: '["''`]https?://(localhost|127\.0\.0\.1)[:/"''`]'
+    paths:
+      include: ["**/*.ts", "**/*.tsx"]
+      exclude: ["**/*.test.*", "**/*.spec.*", "**/test/**"]

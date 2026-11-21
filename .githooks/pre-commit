@@ -1,0 +1,5 @@
+#!/bin/sh
+# pre-commit: luật lỗi-AI qua pre-commit (semgrep). Thiếu pre-commit thì cảnh báo, CI vẫn chặn.
+command -v pre-commit >/dev/null || { echo "[pre-commit] thiếu pre-commit (pip install pre-commit), bỏ qua ai-guard local"; exit 0; }
+cd "$(git rev-parse --show-toplevel)"
+exec pre-commit run

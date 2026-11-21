@@ -10,6 +10,7 @@ echo "[pre-push] frontend: format:check"
 npm run -s format:check || { echo "Chạy 'npm run format' rồi commit lại."; exit 1; }
 echo "[pre-push] frontend: lint"
 npm run -s lint
+command -v pre-commit >/dev/null && { echo "[pre-push] frontend: pre-commit (ai-guard)"; pre-commit run --all-files; }
 
 # Mirror: push lên remote còn lại (local <-> origin).
 case "$remote" in

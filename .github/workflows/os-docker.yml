@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   os:
-    uses: Quy-Organisation/ci-templates/.github/workflows/os-docker.yml@v1.16
+    uses: Quy-Organisation/ci-templates/.github/workflows/os-docker.yml@v1.17
     with:
       native-command: npm ci && npm run lint && npm run build
       node-version: '22'

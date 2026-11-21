@@ -17,5 +17,8 @@ React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `n
 - Dockerfile phải qua hadolint `--failure-threshold error`.
 - Bump tag `ci-templates` đồng bộ ở cả ba workflow.
 
+## Lỗi AI hay gặp (ai-guard)
+Luật semgrep ở `.semgrep/`, danh sách ở `docs/ai-mistakes.md`. Lỗi AI lặp lại lần 2 thì thêm luật + test, đừng chỉ ghi vào đây. Chạy `sh .githooks/ai-guard.sh test|scan`.
+
 ## Việc cần làm
 Xem `todos/`. Mỗi file là một task độc lập. Xong thì đổi `Trạng thái` ở đầu file thành `xong`. Task phụ thuộc `ci-templates` ghi rõ tag tối thiểu cần dùng.
