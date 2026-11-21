@@ -16,3 +16,9 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: ai-guard-checks
+        name: ai-guard kiểm cấu trúc (.dockerignore, .gitignore)
+        entry: sh .githooks/ai-guard.sh check
+        language: system
+        pass_filenames: false
+        always_run: true

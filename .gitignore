@@ -33,3 +33,6 @@ coverage/
 
 # Cloudflare local state
 .wrangler
+
+# Secrets
+.env

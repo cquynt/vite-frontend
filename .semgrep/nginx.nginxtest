@@ -1,0 +1,22 @@
+# Test cho nginx.yml
+server {
+  # ruleid: ai-nginx-privileged-port
+  listen 80;
+  # ok: ai-nginx-privileged-port
+  listen 8080;
+  # ruleid: ai-nginx-unsafe-setting
+  autoindex on;
+  # ok: ai-nginx-unsafe-setting
+  server_tokens off;
+  # ruleid: ai-nginx-cors-wildcard
+  add_header Access-Control-Allow-Origin "*";
+  # ruleid: ai-nginx-add-header-drops-security-headers
+  location /a/ {
+    add_header Cache-Control "no-cache" always;
+  }
+  # ok: ai-nginx-add-header-drops-security-headers
+  location /b/ {
+    include /etc/nginx/security-headers.conf;
+    add_header Cache-Control "no-cache" always;
+  }
+}

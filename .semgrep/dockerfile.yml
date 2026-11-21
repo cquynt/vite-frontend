@@ -1,4 +1,5 @@
-# Lỗi AI hay gặp ở Dockerfile (hadolint đã chạy ở build.yml, đây là các quy ước riêng của repo).
+# Lỗi AI hay gặp ở Dockerfile. hadolint (build.yml) và trivy đã chạy, đây là các quy ước/lỗi chúng bỏ sót.
+# File này dùng chung frontend/backend (bản copy giống hệt). Ngoại lệ: `# nosemgrep: <id> (lý do)` ở dòng trên.
 rules:
   - id: ai-dockerfile-from-not-pinned
     languages: [generic]
@@ -13,5 +14,85 @@ rules:
     severity: ERROR
     message: curl|sh chạy mã tải về không kiểm tra. Tải file, kiểm checksum, rồi chạy.
     pattern-regex: '(curl|wget)\b[^\n]*\|\s*(sudo\s+)?(sh|bash)\b'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-secret-in-env
+    languages: [generic]
+    severity: ERROR
+    message: "Secret đặt bằng ENV/ARG có giá trị nằm vĩnh viễn trong layer và `docker history`. Dùng RUN --mount=type=secret hoặc truyền lúc chạy."
+    pattern-regex: '(?mi)^(ENV|ARG)\s+\w*(PASSWORD|PASSWD|SECRET|TOKEN|API_?KEY|PRIVATE_?KEY)\w*(=|\s+)[^\s$]'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-copy-env-file
+    languages: [generic]
+    severity: ERROR
+    message: "COPY/ADD file .env đưa secret vào image. Bỏ dòng này và thêm .env vào .dockerignore."
+    pattern-regex: '(?m)^(COPY|ADD)\s+[^\n]*(\s|/)\.env(\s|$)'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-add-remote-url
+    languages: [generic]
+    severity: ERROR
+    message: "ADD từ URL tải về không kiểm checksum. Dùng curl + sha256sum -c, hoặc COPY file đã pin."
+    pattern-regex: '(?m)^ADD\s+(--\S+\s+)*https?://'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-chmod-777
+    languages: [generic]
+    severity: ERROR
+    message: "chmod 777 cho mọi user ghi/sửa file trong image. Cấp quyền tối thiểu (chown cho user chạy app, 755/644)."
+    pattern-regex: '\bchmod\s+(-R\s+)?(0?777|a\+rwx|ugo\+rwx)\b'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-user-root
+    languages: [generic]
+    severity: ERROR
+    message: "USER root là USER cuối cùng nên container chạy bằng root. Thêm USER thường sau khi xong việc cần root."
+    pattern-regex: '(?ms)^USER\s+(root|0)(:\S+)?\s*$(?!.*^USER\s)'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-sudo
+    languages: [generic]
+    severity: ERROR
+    message: "sudo trong Dockerfile là dấu hiệu chạy sai user. Dùng USER đúng thay vì sudo."
+    pattern-regex: '(?m)^(RUN|CMD|ENTRYPOINT)\s[^\n]*\bsudo\b'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-expose-ssh
+    languages: [generic]
+    severity: ERROR
+    message: "EXPOSE 22 mở SSH trong container. Dùng docker exec để vào container, đừng chạy sshd."
+    pattern-regex: '(?m)^EXPOSE\s+([^\n]*\s)?22(/\w+)?(\s|$)'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-npm-install
+    languages: [generic]
+    severity: ERROR
+    message: "npm install bỏ qua lockfile, build không lặp lại được. Dùng npm ci."
+    pattern-regex: '(?m)^RUN\s[^\n]*\bnpm\s+(install|i)(\s+(?!-g\b|--global\b)|\s*$|\s*&&)'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-apk-no-cache
+    languages: [generic]
+    severity: ERROR
+    message: "apk add/upgrade không có --no-cache để lại index trong layer (image to, CVE khó dọn). Thêm --no-cache."
+    pattern-regex: '(?m)^RUN\s[^\n]*\bapk\s+(add|upgrade)\b(?![^\n]*--no-cache)'
+    paths:
+      include: ["**/Dockerfile*", "**/*.dockertest"]
+
+  - id: ai-dockerfile-apt-recommends
+    languages: [generic]
+    severity: ERROR
+    message: "apt-get install thiếu -y hoặc --no-install-recommends, và không dọn /var/lib/apt/lists: image phình, build treo chờ xác nhận."
+    pattern-regex: '(?m)^RUN\s[^\n]*\bapt(-get)?\s+install\b(?![^\n]*-y\b)|^RUN\s[^\n]*\bapt(-get)?\s+install\b(?![^\n]*--no-install-recommends)'
     paths:
       include: ["**/Dockerfile*", "**/*.dockertest"]

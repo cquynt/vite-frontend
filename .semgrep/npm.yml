@@ -1,0 +1,25 @@
+# Lỗi AI hay gặp ở cấu hình npm. Ngoại lệ: `# nosemgrep: <id> (lý do)` ở dòng trên (chỉ .npmrc; package.json là JSON, không có comment).
+rules:
+  - id: ai-npm-unpinned-dependency
+    languages: [generic]
+    severity: ERROR
+    message: 'Phiên bản "*"/"latest"/"next" làm build không lặp lại được và dễ dính gói độc. Dùng khoảng phiên bản cụ thể (^1.2.3).'
+    pattern-regex: '(?m)^\s*"[@\w/.-]+"\s*:\s*"(\*|latest|next|x|)"\s*,?\s*$'
+    paths:
+      include: ["**/package.json", "**/*.npmtest"]
+
+  - id: ai-npm-install-script-download
+    languages: [generic]
+    severity: ERROR
+    message: "Script preinstall/postinstall tải và chạy mã từ mạng (curl/wget). Đây là cách phổ biến của gói độc. Bỏ, hoặc vendor file đã kiểm."
+    pattern-regex: '(?m)"(pre|post)?install"\s*:\s*"[^"]*\b(curl|wget)\b'
+    paths:
+      include: ["**/package.json", "**/*.npmtest"]
+
+  - id: ai-npm-insecure-registry
+    languages: [generic]
+    severity: ERROR
+    message: "strict-ssl=false hoặc registry http:// tắt bảo vệ chuỗi cung ứng. Dùng https và bật strict-ssl."
+    pattern-regex: '(?m)^\s*(strict-ssl\s*=\s*false|registry\s*=\s*http://|@[\w-]+:registry\s*=\s*http://)'
+    paths:
+      include: ["**/.npmrc", "**/*.npmtest"]

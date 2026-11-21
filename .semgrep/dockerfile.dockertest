@@ -1,4 +1,4 @@
-# Test cho dockerfile.yml
+# Test cho dockerfile.yml (đuôi .dockertest để trivy/sonar không coi là Dockerfile thật)
 # ruleid: ai-dockerfile-from-not-pinned
 FROM node:22-alpine
 # ok: ai-dockerfile-from-not-pinned
@@ -7,3 +7,45 @@ FROM node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d
 RUN curl -fsSL https://example.com/install.sh | sh
 # ok: ai-dockerfile-curl-pipe-shell
 RUN curl -fsSLo /tmp/x https://example.com/x
+# ruleid: ai-dockerfile-secret-in-env
+ENV API_TOKEN=abc123
+# ok: ai-dockerfile-secret-in-env
+ENV NODE_ENV=production
+# ruleid: ai-dockerfile-copy-env-file
+COPY .env /app/.env
+# ok: ai-dockerfile-copy-env-file
+COPY .env.example /app/.env.example
+# ruleid: ai-dockerfile-add-remote-url
+ADD https://example.com/x.tar.gz /tmp/
+# ok: ai-dockerfile-add-remote-url
+ADD x.tar.gz /tmp/
+# ruleid: ai-dockerfile-chmod-777
+RUN chmod -R 777 /app
+# ok: ai-dockerfile-chmod-777
+RUN chmod 755 /app
+# ok: ai-dockerfile-user-root
+USER root
+RUN apk upgrade --no-cache
+USER node
+# ruleid: ai-dockerfile-sudo
+RUN sudo apk add --no-cache curl
+# ok: ai-dockerfile-sudo
+RUN apk add --no-cache curl
+# ruleid: ai-dockerfile-expose-ssh
+EXPOSE 22
+# ok: ai-dockerfile-expose-ssh
+EXPOSE 8080
+# ruleid: ai-dockerfile-npm-install
+RUN npm install
+# ok: ai-dockerfile-npm-install
+RUN npm ci
+# ruleid: ai-dockerfile-apk-no-cache
+RUN apk add curl
+# ok: ai-dockerfile-apk-no-cache
+RUN apk upgrade --no-cache
+# ruleid: ai-dockerfile-apt-recommends
+RUN apt-get install curl
+# ok: ai-dockerfile-apt-recommends
+RUN apt-get install -y --no-install-recommends curl
+# ruleid: ai-dockerfile-user-root
+USER root

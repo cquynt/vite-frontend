@@ -1,0 +1,25 @@
+# Test cho compose.yml
+services:
+  a:
+    # ruleid: ai-compose-privileged
+    privileged: true
+    # ok: ai-compose-privileged
+    read_only: true
+    # ruleid: ai-compose-docker-sock
+    volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
+    # ok: ai-compose-docker-sock
+    volumes: ["cache:/data"]
+    # ruleid: ai-compose-image-not-pinned
+    image: nginx:latest
+    # ok: ai-compose-image-not-pinned
+    image: nginx:1.30@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+    ports:
+      # ruleid: ai-compose-port-all-interfaces
+      - "3000:3000"
+      # ok: ai-compose-port-all-interfaces
+      - "127.0.0.1:3000:3000"
+    environment:
+      # ruleid: ai-compose-literal-secret
+      DB_PASSWORD: hunter2
+      # ok: ai-compose-literal-secret
+      DB_PASSWORD: ${DB_PASSWORD}

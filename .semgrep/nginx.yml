@@ -1,0 +1,33 @@
+# Lỗi AI hay gặp ở cấu hình nginx. Ngoại lệ: `# nosemgrep: <id> (lý do)` ở dòng trên.
+rules:
+  - id: ai-nginx-add-header-drops-security-headers
+    languages: [generic]
+    severity: ERROR
+    message: "location có add_header nhưng không include security-headers.conf: add_header ở location xoá mọi header từ cấp server (mất CSP/HSTS...). Thêm include /etc/nginx/security-headers.conf trong location."
+    pattern-regex: '(?s)location\s[^{}]*\{(?![^{}]*include\s+/etc/nginx/security-headers\.conf)[^{}]*\badd_header\b'
+    paths:
+      include: ["**/nginx/**/*.conf", "**/*.nginxtest"]
+
+  - id: ai-nginx-unsafe-setting
+    languages: [generic]
+    severity: ERROR
+    message: "Cấu hình nginx không an toàn: autoindex on (lộ danh sách file), server_tokens on (lộ phiên bản), user root, client_max_body_size 0 (không giới hạn upload), ssl_protocols cũ (TLSv1/1.1)."
+    pattern-regex: '(?m)^\s*(autoindex\s+on|server_tokens\s+on|user\s+root|client_max_body_size\s+0\s*;|ssl_protocols\s[^;]*\bTLSv1(\.1)?\b)'
+    paths:
+      include: ["**/nginx/**/*.conf", "**/*.nginxtest"]
+
+  - id: ai-nginx-privileged-port
+    languages: [generic]
+    severity: ERROR
+    message: "Image nginx-unprivileged chạy non-root, không bind được cổng <1024 (container crash khi khởi động). Dùng 8080/8443."
+    pattern-regex: '(?m)^\s*listen\s+(\[::\]:|[\d.]+:)?(80|443)\b'
+    paths:
+      include: ["**/nginx/**/*.conf", "**/*.nginxtest"]
+
+  - id: ai-nginx-cors-wildcard
+    languages: [generic]
+    severity: ERROR
+    message: "CORS cho mọi origin (Access-Control-Allow-Origin *) cho phép trang lạ gọi API của bạn. Liệt kê origin cụ thể."
+    pattern-regex: '(?mi)add_header\s+Access-Control-Allow-Origin\s+[''"]?\*'
+    paths:
+      include: ["**/nginx/**/*.conf", "**/*.nginxtest"]
