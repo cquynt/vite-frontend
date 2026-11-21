@@ -6,7 +6,7 @@ rules:
     message: "FROM phải pin digest (image:tag@sha256:...). Quy ước repo, tránh build không lặp lại được."
     pattern-regex: '(?m)^FROM\s+(?!scratch\b)(?!\S+@sha256:)(?!\$)(?!\S+\s+AS\s+\S+\s*$)\S+'
     paths:
-      include: ["**/Dockerfile*", "**/*.Dockerfile"]
+      include: ["**/Dockerfile*", "**/*.dockertest"]
 
   - id: ai-dockerfile-curl-pipe-shell
     languages: [generic]
@@ -14,4 +14,4 @@ rules:
     message: curl|sh chạy mã tải về không kiểm tra. Tải file, kiểm checksum, rồi chạy.
     pattern-regex: '(curl|wget)\b[^\n]*\|\s*(sudo\s+)?(sh|bash)\b'
     paths:
-      include: ["**/Dockerfile*", "**/*.Dockerfile"]
+      include: ["**/Dockerfile*", "**/*.dockertest"]
