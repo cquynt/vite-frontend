@@ -7,7 +7,7 @@ React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `n
 - `docker build -t frontend .` (Dockerfile prod); `docker compose up` dùng `Dockerfile.dev` ở cổng 3000.
 
 ## CI/CD
-- `.github/workflows/ci.yml`, `matrix.yml`, `nightly.yml` chỉ gọi workflow trong repo `ci-templates`. Logic pipeline nằm bên đó, đừng nhân bản vào đây.
+- `.github/workflows/ci.yml`, `nightly.yml`, `os-docker.yml` chỉ gọi workflow trong repo `ci-templates`. Logic pipeline nằm bên đó, đừng nhân bản vào đây.
 - Chỉ nhánh `main` mới deploy (host port 8082). Health path `/`, smoke match `<div id="root"`.
 - Verify chữ ký bằng `cosign.pub` ở gốc repo.
 - `.trivyignore.yaml` ghi lý do mọi ngoại lệ (DS-0002 cho `Dockerfile.dev`, AGPL cho texlyre-busytex). Thêm ngoại lệ phải có `statement`.
