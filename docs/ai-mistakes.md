@@ -26,8 +26,13 @@ Luật nằm ở `.semgrep/`. Mỗi luật có test trong cùng thư mục.
 
 ## Thêm luật mới (mỗi lỗi AI lặp lại lần 2)
 1. Thêm luật vào `.semgrep/<tên>.yml` (message nói rõ cách sửa).
-2. Thêm ca test cùng tên file trong `.semgrep/` với comment `ruleid: <id>` (phải bị bắt) và `ok: <id>` (không bị bắt) ngay dòng trước đoạn code.
-3. Chạy: `sh .githooks/ai-guard.sh test && sh .githooks/ai-guard.sh scan` (cần Docker).
-4. Ngoại lệ có chủ đích: comment `nosemgrep: <id>` kèm lý do ở dòng đó.
+2. Thêm ca test cùng tên file trong `.semgrep/` với comment `ruleid: <id>` (phải bị bắt) và `ok: <id>` (không bị bắt); thiếu một trong hai thì `check` báo lỗi ngay dòng trước đoạn code.
+3. Chạy: `sh .githooks/ai-guard.sh check && sh .githooks/ai-guard.sh test && sh .githooks/ai-guard.sh scan` (test/scan cần Docker).
+4. Ngoại lệ có chủ đích: comment `nosemgrep: <id> (lý do)` ở dòng đó; thiếu lý do thì `check` báo lỗi.
 
-Luật chạy ở 3 nơi: `pre-commit` (`.githooks/pre-commit`), `pre-push`, và job `ai-guard` trong CI (`ci-templates/.github/workflows/ai-guard.yml`). Máy không có Docker thì bỏ qua local, CI vẫn chặn.
+Luật chạy ở 3 nơi bằng CÙNG một script `.githooks/ai-guard.sh` (`test|scan|check`): `pre-commit` (chỉ quét file đã staged, nhanh), `pre-push` (`pre-commit run --all-files`: quét cả repo), và job `ai-guard` trong CI (`ci-templates/.github/workflows/ai-guard.yml`, chạy script trong image semgrep). Máy không có Docker thì bỏ qua `test`/`scan` local (CI vẫn chặn); `check` không cần Docker.
+
+## Hành vi ai-guard (chuẩn từ ci-templates)
+- `ai-guard.sh`, `.semgrep/checks.sh`, `.githooks/pre-commit`, `.pre-commit-config.yaml` là bản chuẩn của `ci-templates`; repo con chỉ được đổi bằng `ci-templates/scripts/sync-ai-guard.sh` (`--check` để xem lệch). Luật riêng `.semgrep/*.yml` thì mỗi repo tự giữ.
+- `scan` bỏ qua `node_modules`, `dist`, `build`, `coverage`, `.gradle`, `.git` (nhanh hơn, ít nhiễu).
+- `checks.sh` kiểm: `.dockerignore` có `.env`/`.git`; `.gitignore` có `.env`; không có file `.env*` thật bị git theo dõi (trừ `.example/.sample/.template`); mỗi file luật có file test cùng tên với đủ `ruleid: <id>` và `ok: <id>` cho từng luật (semgrep `--test` tự bỏ qua luật thiếu test); mỗi `nosemgrep: <id>` phải trỏ luật có thật và kèm lý do; image semgrep ở `ai-guard.sh` khớp `ai-guard.yml`.

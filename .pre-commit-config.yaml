@@ -1,9 +1,15 @@
-# Cài: pip install pre-commit (repo dùng core.hooksPath=.githooks nên KHÔNG chạy `pre-commit install`;
-# .githooks/pre-commit và .githooks/pre-push gọi `pre-commit run` thay).
-# Chạy tay: pre-commit run --all-files
+# Nguồn chuẩn: ci-templates (đồng bộ bằng scripts/sync-ai-guard.sh). Cài: pip install pre-commit (repo dùng
+# core.hooksPath=.githooks nên KHÔNG chạy `pre-commit install`; .githooks/pre-commit và pre-push gọi `pre-commit run`).
+# Chạy tay: pre-commit run --all-files. Cùng script .githooks/ai-guard.sh với CI.
 repos:
   - repo: local
     hooks:
+      - id: ai-guard-checks
+        name: ai-guard kiểm cấu trúc (.dockerignore, .gitignore, test luật đủ, nosemgrep)
+        entry: sh .githooks/ai-guard.sh check
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: ai-guard-rules-test
         name: ai-guard test luật (.semgrep)
         entry: sh .githooks/ai-guard.sh test
@@ -11,14 +17,7 @@ repos:
         files: ^\.semgrep/
         pass_filenames: false
       - id: ai-guard-scan
-        name: ai-guard quét lỗi AI hay gặp
+        name: ai-guard quét lỗi AI hay gặp (chỉ file thay đổi; pre-push quét hết)
         entry: sh .githooks/ai-guard.sh scan
         language: system
-        pass_filenames: false
-        always_run: true
-      - id: ai-guard-checks
-        name: ai-guard kiểm cấu trúc (.dockerignore, .gitignore)
-        entry: sh .githooks/ai-guard.sh check
-        language: system
-        pass_filenames: false
-        always_run: true
+        exclude: ^\.semgrep/

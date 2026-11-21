@@ -18,7 +18,7 @@ React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `n
 - Bump tag `ci-templates` đồng bộ ở cả ba workflow.
 
 ## Lỗi AI hay gặp (ai-guard)
-Luật semgrep ở `.semgrep/`, danh sách ở `docs/ai-mistakes.md`. Lỗi AI lặp lại lần 2 thì thêm luật + test, đừng chỉ ghi vào đây. Chạy `sh .githooks/ai-guard.sh test|scan`.
+Luật semgrep ở `.semgrep/`, danh sách ở `docs/ai-mistakes.md`. Lỗi AI lặp lại lần 2 thì thêm luật + test, đừng chỉ ghi vào đây. Chạy `sh .githooks/ai-guard.sh check|test|scan` (cùng script với pre-commit, pre-push và CI). Script và `.semgrep/checks.sh` là bản chuẩn từ ci-templates: sửa ở đó rồi `../ci-templates/scripts/sync-ai-guard.sh`, đừng sửa tay.
 
 ## Việc cần làm
 Task nằm trên Gitea kanban: http://localhost:3000/Quy-Organisation/-/projects/1 (project `Tasks`, cột `Todo`, `Doing`, `Blocked`, `Done`; mỗi task là một issue, nhãn `P0|P1|P2`, body gồm mục tiêu, tiêu chí xong, phụ thuộc). Công cụ: `../ci-templates/scripts/tasks.sh` (đọc token `GITEA_TASK_TOKEN` từ `docker-lab/.env`, không in token ra, không commit `.env`). Xem đủ lệnh bằng `tasks.sh help`: `list`, `get`, `create`, `update`, `move`, `comment`, `close`, `delete`.

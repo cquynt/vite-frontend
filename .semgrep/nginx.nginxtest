@@ -10,6 +10,8 @@ server {
   server_tokens off;
   # ruleid: ai-nginx-cors-wildcard
   add_header Access-Control-Allow-Origin "*";
+  # ok: ai-nginx-cors-wildcard
+  add_header Access-Control-Allow-Origin "https://app.example.com";
   # ruleid: ai-nginx-add-header-drops-security-headers
   location /a/ {
     add_header Cache-Control "no-cache" always;
