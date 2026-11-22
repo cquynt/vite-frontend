@@ -1,6 +1,6 @@
 # Nguồn chuẩn: ci-templates (đồng bộ bằng scripts/sync-ai-guard.sh). Cài: pip install pre-commit (repo dùng
 # core.hooksPath=.githooks nên KHÔNG chạy `pre-commit install`; .githooks/pre-commit và pre-push gọi `pre-commit run`).
-# Chạy tay: pre-commit run --all-files. Cùng script .githooks/ai-guard.sh với CI.
+# Chạy tay: pre-commit run --all-files. Cùng script .githooks/ai-guard.sh, .githooks/config-lint.sh với CI.
 repos:
   - repo: local
     hooks:
@@ -21,3 +21,7 @@ repos:
         entry: sh .githooks/ai-guard.sh scan
         language: system
         exclude: ^\.semgrep/
+      - id: config-lint
+        name: config-lint cú pháp + lint file cấu hình (YAML, JSON/JSONC, workflow, whitespace/EOF/conflict)
+        entry: sh .githooks/config-lint.sh
+        language: system

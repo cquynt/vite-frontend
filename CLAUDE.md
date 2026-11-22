@@ -17,6 +17,9 @@ React + Vite SPA (TypeScript), build thành static `dist/`, đóng gói image `n
 - Dockerfile phải qua hadolint `--failure-threshold error`.
 - Bump tag `ci-templates` đồng bộ ở cả ba workflow.
 
+## Lint file cấu hình (config-lint)
+`sh .githooks/config-lint.sh` kiểm YAML (yamllint, `.yamllint.yaml`), JSON/JSONC, workflow (actionlint), whitespace/EOF/merge conflict. Cùng script với pre-commit (file staged), pre-push (cả repo) và job `config-lint` trong CI. `config-lint.sh`, `.yamllint.yaml`, `.github/actionlint.yaml` là bản chuẩn từ ci-templates: sửa ở đó rồi `../ci-templates/scripts/sync-ai-guard.sh`.
+
 ## Lỗi AI hay gặp (ai-guard)
 Luật semgrep ở `.semgrep/`, danh sách ở `docs/ai-mistakes.md`. Lỗi AI lặp lại lần 2 thì thêm luật + test, đừng chỉ ghi vào đây. Chạy `sh .githooks/ai-guard.sh check|test|scan` (cùng script với pre-commit, pre-push và CI). Script và `.semgrep/checks.sh` là bản chuẩn từ ci-templates: sửa ở đó rồi `../ci-templates/scripts/sync-ai-guard.sh`, đừng sửa tay.
 

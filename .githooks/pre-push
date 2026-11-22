@@ -1,5 +1,5 @@
 #!/bin/sh
-# pre-push: format check + lint. Sửa format: npm run format
+# pre-push: format check + lint + config-lint. Sửa format: npm run format
 # Push inner (mirror) đã được kiểm tra ở lần push ngoài.
 [ -n "$PREPUSH_MIRROR" ] && exit 0
 remote="$1"
@@ -10,7 +10,9 @@ echo "[pre-push] frontend: format:check"
 npm run -s format:check || { echo "Chạy 'npm run format' rồi commit lại."; exit 1; }
 echo "[pre-push] frontend: lint"
 npm run -s lint
-command -v pre-commit >/dev/null && { echo "[pre-push] frontend: pre-commit (ai-guard)"; pre-commit run --all-files; }
+echo "[pre-push] frontend: config-lint (YAML, JSON/JSONC, workflow, whitespace/EOF/conflict)"
+sh .githooks/config-lint.sh
+command -v pre-commit >/dev/null && { echo "[pre-push] frontend: pre-commit (ai-guard)"; SKIP=config-lint pre-commit run --all-files; }
 
 # Mirror: push lên remote còn lại (local <-> origin).
 case "$remote" in

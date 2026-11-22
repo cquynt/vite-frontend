@@ -59,4 +59,13 @@ if [ -f .githooks/ai-guard.sh ] && [ -f .github/workflows/ai-guard.yml ]; then
   w=$(grep -o "semgrep/semgrep:[^' ]*" .github/workflows/ai-guard.yml | sort -u)
   [ "$a" = "$w" ] || fail "image semgrep lệch: ai-guard.sh ($a) khác ai-guard.yml ($w)"
 fi
+
+# 6. Image ở config-lint.sh phải khớp config-lint.yml (nếu có cả hai trong repo)
+if [ -f .githooks/config-lint.sh ] && [ -f .github/workflows/config-lint.yml ]; then
+  for img in pipelinecomponents/yamllint rhysd/actionlint; do
+    a=$(grep -o "$img:[^' ]*" .githooks/config-lint.sh | head -1)
+    w=$(grep -o "$img:[^' ]*" .github/workflows/config-lint.yml | sort -u)
+    [ "$a" = "$w" ] || fail "image $img lệch: config-lint.sh ($a) khác config-lint.yml ($w)"
+  done
+fi
 exit $rc

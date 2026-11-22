@@ -1,5 +1,7 @@
 #!/bin/sh
-# pre-commit: luật lỗi-AI qua pre-commit (semgrep). Thiếu pre-commit thì cảnh báo, CI vẫn chặn.
-command -v pre-commit >/dev/null || { echo "[pre-commit] thiếu pre-commit (pip install pre-commit), bỏ qua ai-guard local"; exit 0; }
-cd "$(git rev-parse --show-toplevel)"
-exec pre-commit run
+# pre-commit: luật lỗi-AI + config-lint qua pre-commit (file staged). Thiếu pre-commit thì chỉ chạy config-lint trên file staged, CI vẫn chặn.
+cd "$(git rev-parse --show-toplevel)" || exit 1
+command -v pre-commit >/dev/null && exec pre-commit run
+echo "[pre-commit] thiếu pre-commit (pip install pre-commit), bỏ qua ai-guard local, chỉ chạy config-lint"
+[ -n "$(git diff --cached --name-only --diff-filter=ACMR)" ] || exit 0
+git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 sh .githooks/config-lint.sh

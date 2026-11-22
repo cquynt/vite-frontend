@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    uses: Quy-Organisation/ci-templates/.github/workflows/build.yml@v1.23
+    uses: Quy-Organisation/ci-templates/.github/workflows/build.yml@v1.24
     with:
       image-name: frontend
       test-image: node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
@@ -27,7 +27,7 @@ jobs:
       smoke-match: '<div id="root"'
 
   scan-source:
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.23
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-source.yml@v1.24
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -42,14 +42,14 @@ jobs:
 
   scan-image:
     needs: build
-    uses: Quy-Organisation/ci-templates/.github/workflows/scan-image.yml@v1.23
+    uses: Quy-Organisation/ci-templates/.github/workflows/scan-image.yml@v1.24
     with:
       image-name: frontend
       health-path: /
 
   deploy:
     needs: [build, scan-source, scan-image]
-    uses: Quy-Organisation/ci-templates/.github/workflows/deploy.yml@v1.23
+    uses: Quy-Organisation/ci-templates/.github/workflows/deploy.yml@v1.24
     secrets:
       COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
@@ -59,12 +59,15 @@ jobs:
       health-path: /
 
   ai-guard:
-    uses: Quy-Organisation/ci-templates/.github/workflows/ai-guard.yml@v1.23
+    uses: Quy-Organisation/ci-templates/.github/workflows/ai-guard.yml@v1.24
+
+  config-lint:
+    uses: Quy-Organisation/ci-templates/.github/workflows/config-lint.yml@v1.24
 
   # Required check duy nhất (luôn chạy, kể cả PR chỉ sửa .md)
   gate:
     if: always()
-    needs: [build, scan-source, scan-image, deploy, ai-guard]
+    needs: [build, scan-source, scan-image, deploy, ai-guard, config-lint]
     runs-on: ubuntu-26.04
     timeout-minutes: 5
     steps:

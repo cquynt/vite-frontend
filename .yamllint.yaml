@@ -1,0 +1,19 @@
+# Nguồn chuẩn: ci-templates (đồng bộ bằng scripts/sync-ai-guard.sh). Dùng bởi .githooks/config-lint.sh (pre-commit, pre-push, CI).
+# Chạy tay: sh .githooks/config-lint.sh files. error chặn, warning chỉ in ra.
+extends: default
+ignore: |
+  node_modules/
+  dist/
+  build/
+  coverage/
+  .gradle/
+rules:
+  document-start: disable           # không bắt buộc '---' đầu file
+  truthy:
+    check-keys: false               # `on:` của GitHub Actions là key, không phải boolean
+  line-length: disable              # repo hay có comment dài cuối dòng
+  comments:
+    min-spaces-from-content: 1
+  braces: {max-spaces-inside: 1}
+  brackets: {max-spaces-inside: 1}
+  colons: {max-spaces-after: -1}    # cho phép căn cột `key:   { ... }`
