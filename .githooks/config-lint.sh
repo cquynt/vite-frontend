@@ -120,7 +120,7 @@ PYEOF
 
 list0() {
   if git rev-parse --git-dir >/dev/null 2>&1; then git ls-files -z
-  else find . \( -name .git -o -name node_modules -o -name dist -o -name build -o -name coverage -o -name .gradle \) -prune -o -type f -print0
+  else find . \( -name .git -o -name node_modules -o -name dist -o -name build -o -name coverage -o -name .gradle -o -name .build -o -name DerivedData -o -name .swiftpm \) -prune -o -type f -print0
   fi
 }
 

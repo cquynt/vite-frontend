@@ -12,7 +12,7 @@ IMG='semgrep/semgrep:1.184.0@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497
 RULES_DIR="${RULES_DIR:-.semgrep}"
 mode="$1"; [ $# -gt 0 ] && shift
 # Thư mục sinh ra/phụ thuộc: bỏ qua cho nhanh (bind mount macOS chậm với node_modules) và bớt nhiễu.
-EXCL="--exclude $RULES_DIR --exclude node_modules --exclude dist --exclude build --exclude coverage --exclude .gradle --exclude .git"
+EXCL="--exclude $RULES_DIR --exclude node_modules --exclude dist --exclude build --exclude coverage --exclude .gradle --exclude .build --exclude DerivedData --exclude .swiftpm --exclude .git"
 FLAGS="--metrics=off --disable-version-check"
 
 case "$mode" in

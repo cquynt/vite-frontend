@@ -43,7 +43,7 @@ done
 
 # 4. nosemgrep phải kèm lý do (sau id) và id phải là luật có thật
 ids=$(cat "$D"/*.yml 2>/dev/null | sed -n 's/^ *- id: *//p')
-grep -rnI --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=build --exclude-dir=.gradle \
+grep -rnI --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=build --exclude-dir=.gradle --exclude-dir=.build --exclude-dir=DerivedData --exclude-dir=.swiftpm \
   --exclude-dir="$(basename "$D")" --exclude=ai-mistakes.md --exclude=CLAUDE.md --exclude=README.md \
   'nosemgrep:' . 2>/dev/null | while IFS= read -r line; do
   rest=$(printf '%s' "$line" | sed -n 's/.*nosemgrep: *//p')
