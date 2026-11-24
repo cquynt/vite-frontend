@@ -40,7 +40,10 @@ beforeEach(() => {
   });
 });
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 const loaded = async () => {
   const view = render(<App />);
@@ -50,13 +53,15 @@ const loaded = async () => {
 
 describe("App", () => {
   it("loads the project, shows the tab, breadcrumbs, problems and status", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     const { container } = await loaded();
     expect(container.querySelector(".tab.active")?.textContent).toContain("main.tex");
     expect(container.querySelector(".breadcrumbs")?.textContent).toContain("main.tex");
     expect(container.querySelector(".state-chip")?.textContent).toBe("done");
     expect(screen.getByText("Undefined control sequence.")).toBeTruthy();
     expect(container.querySelector("iframe")).not.toBeNull();
-    await waitFor(() => expect(compiler.value.compile).toHaveBeenCalled());
+    await act(() => vi.advanceTimersByTimeAsync(800));
+    expect(compiler.value.compile).toHaveBeenCalled();
   });
 
   it("navigates from a problem to its line", async () => {
